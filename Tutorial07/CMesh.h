@@ -27,8 +27,6 @@ public:
 
 	SimpleVertex *m_vertex = nullptr;
 	WORD *m_index = nullptr;
-	//int m_topolgy = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	//D3D11_PRIMITIVE_TOPOLOGY  m_topolgy = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	std::vector <std::uint32_t> indicesss;
 	XMMATRIX Esmatris = XMMatrixIdentity();
 	XMMATRIX Escar = XMMatrixIdentity();

@@ -76,6 +76,11 @@ public:
 		XMMATRIX mWorld;
 		XMFLOAT4 vMeshColor;
 		XMFLOAT4 lightDir;
+		XMFLOAT4 vViewPosition;
+		//float SpecularPower;                // Specular pow factor
+		XMFLOAT4 SpecularColor;               // Specular color (sRGBA)
+		XMFLOAT4 DifuseColor;                 // Difuse color (sRGBA)
+		XMFLOAT4 SPpower;
 	};
 	//struct CBChangesEveryFrameMarix
 	//{

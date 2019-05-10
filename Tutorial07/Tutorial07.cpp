@@ -40,6 +40,11 @@ struct CBChangesEveryFrame
 	XMMATRIX mWorld;
 	XMFLOAT4 vMeshColor;
 	XMFLOAT4 lightDir;
+	XMFLOAT4 vViewPosition;
+	//float SpecularPower;                // Specular pow factor
+	XMFLOAT4 SpecularColor;               // Specular color (sRGBA)
+	XMFLOAT4 DifuseColor;
+	XMFLOAT4 SPpower;
 };
 
 
@@ -160,7 +165,7 @@ void keyBoardKey(unsigned char key, int x, int y)
 		g_manager.m_camera[g_manager.m_cameraNum].eye += (g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed);
 		g_manager.m_camera[g_manager.m_cameraNum].at += g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
 	}
-	if (key == 'J' || key == 'j')	// Zoom atras
+	if (key == 'J' || key == 'j')	// rotation mesh
 	{
 		if (g_manager.bRotationMesh)
 		{
@@ -172,14 +177,14 @@ void keyBoardKey(unsigned char key, int x, int y)
 
 		}
 	}
-	if (key == 'I' || key == 'i')
+	if (key == 'I' || key == 'i')//disminuir escala
 	{
 		for (int i = 0; i < g_manager.m_meshes.size(); i++)
 		{
 			g_manager.m_meshes[i].escalar -= 0.1;
 		}
 	}
-	if (key == 'O' || key == 'o')
+	if (key == 'O' || key == 'o')//aumentar escala
 	{
 		for (int i = 0; i < g_manager.m_meshes.size(); i++)
 		{
@@ -187,10 +192,10 @@ void keyBoardKey(unsigned char key, int x, int y)
 		}
 	}
 	
-	if (key == 'r' || key == 'R')
+	if (key == 'r' || key == 'R')//reset view
 		g_manager.resetView();
 	if (key == 'm' || key == 'M' || key == 'n' || key == 'N')
-		g_manager.changeSpeed(key);
+		g_manager.changeSpeed(key);//change spped
 	if (key == 'f' || key == 'F')
 	{
 		if (g_manager.bFiestaMode)
@@ -202,7 +207,7 @@ void keyBoardKey(unsigned char key, int x, int y)
 	{
 		g_manager.m_camera[g_manager.m_cameraNum].zoom(key);
 	}
-	if (key == 'H' || key == 'h')
+	if (key == 'H' || key == 'h')//escalar model
 	{
 		for (int i = 0; i < g_manager.m_meshes.size(); i++)
 		{
@@ -855,12 +860,21 @@ void renderFirtsPersonCam()
 	Pantalla.vMeshColor = g_vMeshColorTri;
 	Pantalla.mWorld = transformPantalla* g_manager.m_mesh.Esmatris;
 	Pantalla.lightDir = g_manager.m_lightDir;
+	Pantalla.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
+	Pantalla.DifuseColor = g_manager.DifuseColor;
+	Pantalla.SpecularColor = g_manager.SpecularColor;
+	Pantalla.SPpower = g_manager.SPpower;
 	//Pantalla.mWorld = transformPantalla * g_manager.m_camera[0].matPosition;
 
 	hands.vMeshColor = {.5,.5,0.2,0};
 
 	hands.mWorld = transforhands;
 	hands.lightDir = g_manager.m_lightDir;
+
+	hands.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
+	hands.DifuseColor = g_manager.DifuseColor;
+	hands.SpecularColor = g_manager.SpecularColor;
+	hands.SPpower = g_manager.SPpower;
 
 	if (g_manager.m_buffers.m_pVertexBuffer) g_manager.m_buffers.m_pVertexBuffer->Release();
 	if (g_manager.m_buffers.m_pIndexBuffer)g_manager.m_buffers.m_pIndexBuffer->Release();
@@ -1080,7 +1094,7 @@ void renderFirtsPersonCam()
 
 	}
 
-	g_manager.bRotationMesh = true;
+	g_manager.bRotationMesh = false;
 	for (int i = 0; i < g_manager.m_meshes.size(); i++)
 	{
 		g_manager.m_meshes[i].escaleModel();
@@ -1346,7 +1360,14 @@ void Render()
 
 	GLuint LDID = glGetUniformLocation(g_manager.programID, "LD");
 	glUniform4fv(LDID, 1, &g_manager.ligthDir[0]);
-
+	GLuint VPID = glGetUniformLocation(g_manager.programID, "VP");
+	glUniform4fv(VPID, 1, &g_manager.m_camera[g_manager.m_cameraNum].eye[0]);
+	GLuint SCID = glGetUniformLocation(g_manager.programID, "SC");
+	glUniform4fv(SCID, 1, &g_manager.SpecularColor[0]);
+	GLuint DCID = glGetUniformLocation(g_manager.programID, "DC");
+	glUniform4fv(DCID, 1, &g_manager.DifuseColor[0]);
+	GLuint SPID = glGetUniformLocation(g_manager.programID, "SP");
+	glUniform4fv(SPID, 1, &g_manager.SPpower[0]);
 	checkWindowSize();
 	
 	renderSegurityCam();
@@ -1421,6 +1442,12 @@ void drawnm_meshes(XMMATRIX mvp)
 		g_manager.fiesta();
 		m_meshes.vMeshColor = g_manager.color;
 		m_meshes.lightDir = g_manager.m_lightDir;
+
+		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
+		m_meshes.DifuseColor = g_manager.DifuseColor;
+		m_meshes.SpecularColor = g_manager.SpecularColor;
+		m_meshes.SPpower = g_manager.SPpower;
+
 		g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &m_meshes, 0, 0);
 		g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_meshes[i].m_numIndex, 0, 0);
 	}
@@ -1485,6 +1512,12 @@ void drawnm_meshes(XMMATRIX mvp)
 		g_manager.fiesta();
 		m_meshes.vMeshColor = g_manager.color;
 		m_meshes.lightDir = g_manager.m_lightDir;
+
+		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
+		m_meshes.DifuseColor = g_manager.DifuseColor;
+		m_meshes.SpecularColor = g_manager.SpecularColor;
+		m_meshes.SPpower = g_manager.SPpower;
+
 		g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &m_meshes, 0, 0);
 		g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_meshes2[i].m_numIndex, 0, 0);
 	}

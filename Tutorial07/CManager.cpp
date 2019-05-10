@@ -223,7 +223,7 @@ void CManager::chargeMesh()
 		// for each mesh, i create a new mesh object
 		CMesh newmesh;
 		newmesh.traslateX = -30;
-		newmesh.bescalar = true;
+		newmesh.bescalar = false;
 		//newmesh.rotateOff = false;
 		
 		m_meshes2.push_back(newmesh);

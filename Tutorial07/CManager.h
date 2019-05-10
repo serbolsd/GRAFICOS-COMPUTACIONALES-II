@@ -19,24 +19,24 @@ public:
 #else
 #endif // !DX
 	CDevice m_device;
-	std::vector<CCamera> m_camera;
-	CCamera m_camera1;
-	CCamera m_camera2;
-	CDeviceContext m_deviceContext;
-	CSwapChain m_swapChain;
-	CBUFER m_buffers;
-	CTexture m_texture;
-	CRenderTarget m_renderTargetV;
-	CRenderTarget m_renderTargetV2;
-	CVertexShader m_vs;
-	CPixelShader m_ps;
-	CLayout m_layout;
+	std::vector<CCamera>	m_camera;
+	CCamera					m_camera1;
+	CCamera					m_camera2;
+	CDeviceContext			m_deviceContext;
+	CSwapChain				m_swapChain;
+	CBUFER					m_buffers;
+	CTexture				m_texture;
+	CRenderTarget			m_renderTargetV;
+	CRenderTarget			m_renderTargetV2;
+	CVertexShader			m_vs;
+	CPixelShader			m_ps;
+	CLayout					m_layout;
 
 
-	CMesh m_mesh;
-	CMesh m_hand;
-	std::vector<CMesh> m_meshes;
-	std::vector<CMesh> m_meshes2;
+	CMesh				m_mesh;
+	CMesh				m_hand;
+	std::vector<CMesh>	m_meshes;
+	std::vector<CMesh>	m_meshes2;
 	void drawnm_meshes();
 
 	int m_cameraNum = 0;
@@ -60,10 +60,19 @@ public:
 	void textureChange(ID3D11ShaderResourceView* &pTextureRV);
 	void generateRenderTexture();
 	_XMFLOAT4 color;
-	XMFLOAT4 m_lightDir = {1,0,0,0};
+
+
+	XMFLOAT4 m_lightDir = {0,-1,0,0};
+	XMFLOAT4 SpecularColor = { 255,20,10,140 };
+	XMFLOAT4 DifuseColor = {125,40,25,30};
+	XMFLOAT4 SPpower = {10,0,0,0};
 #elif OPENGL
 	vec4 color = vec4(1, 1, 1, 1);
 	vec4 ligthDir = vec4(1,0,0,0);
+	vec4 SpecularColor = { 255,20,10,140 };
+	vec4 DifuseColor = { 125,40,25,30 };
+	vec4 SPpower = { 50,0,0,0 };
+
 	bool bRotationMesh = true;
 	myRECT WindowSize;
 	myRECT WindowSizeAnte;
