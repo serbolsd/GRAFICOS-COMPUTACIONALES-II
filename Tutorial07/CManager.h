@@ -33,10 +33,10 @@ public:
 	CLayout					m_layout;
 
 
-	CMesh				m_mesh;
-	CMesh				m_hand;
+	//	CMesh				m_mesh;
+	//	CMesh				m_hand;
 	std::vector<CMesh>	m_meshes;
-	std::vector<CMesh>	m_meshes2;
+	//std::vector<CMesh>	m_meshes2;
 	void drawnm_meshes();
 
 	int m_cameraNum = 0;
@@ -62,16 +62,23 @@ public:
 	_XMFLOAT4 color;
 
 
-	XMFLOAT4 m_lightDir = {0,-1,0,0};
-	XMFLOAT4 SpecularColor = { 255,20,10,140 };
-	XMFLOAT4 DifuseColor = {125,40,25,30};
-	XMFLOAT4 SPpower = {10,0,0,0};
+	XMFLOAT4 m_lightDir = { 1,0,0,0 };
+	XMFLOAT4 SpecularColor = { 255,255,255,0 };
+	XMFLOAT4 DifuseColor = { 0,255,0,0 };
+	XMFLOAT4 SPpower = { 1,1,1,1 };
+	XMFLOAT4 ambientColor = { 255,0,0,0 };
+	XMFLOAT4 KDAS = { 1,0.001,1,1 };
 #elif OPENGL
 	vec4 color = vec4(1, 1, 1, 1);
-	vec4 ligthDir = vec4(1,0,0,0);
-	vec4 SpecularColor = { 255,20,10,140 };
-	vec4 DifuseColor = { 125,40,25,30 };
-	vec4 SPpower = { 50,0,0,0 };
+	vec4 ligthDir = vec4(1, 0, -1, 0);
+	vec4 SpecularColor = { 1,1,1,1 };
+	vec4 ambientColor = { 1,0,0,0 };
+	vec4 KDASL = { 1,0.001,1,10 };
+	//vec4 DifuseColor = { 20,20,20,20 };
+	vec4 DifuseColor = { 0,1,0,0 };
+	//vec4 DifuseColor = { 0,0,0,0};
+	//vec4 SpecularColor = { .4,.4,.4,.4 };
+	vec4 SPpower = vec4(10);
 
 	bool bRotationMesh = true;
 	myRECT WindowSize;
@@ -80,7 +87,7 @@ public:
 	GLenum DrawBuffers[1];
 	GLuint m_LinearSampler;//linear sample ID
 	GLuint programID;
-	
+
 	GLuint depthrenderbuffer;
 	GLuint depthrenderbuffer2;
 	GLuint renderedTexture;
@@ -94,7 +101,7 @@ public:
 #endif // DX
 
 
-	bool DInitDevice(HRESULT &hr,const HWND& hWnd);
+	bool DInitDevice(HRESULT &hr, const HWND& hWnd);
 	void DswapChain(const HWND& hWnd);
 	bool DcreateRenderTargetV(HRESULT &hr);
 	void DcreateDepthStencilTex(HRESULT &hr);
@@ -108,6 +115,7 @@ public:
 	//TEXTURE//////////////////////////////
 	int m_numTexture = 3;
 	void readTextureMesh(int i);
+	void readNormTextureMesh(int i);
 	//MESH/////////////////////////////////
 	void changeToCube();
 	void changeToTriangle();
@@ -124,7 +132,7 @@ public:
 	void resetView();
 	void changeCamera();
 	void ReadPantalla();
-	
+
 #ifdef DX
 	void changeSpeed(WPARAM wParam);
 	//bool bEscalar = true;
@@ -132,10 +140,13 @@ public:
 	void changeSpeed(unsigned char key);
 #endif // DX
 
+	void changeSpecularPower(int x);
+
 	int m_Width;
 	int m_Height;
 
-	
+	float spMaxi = 15;
+	float spMin = 1;
 
 	bool bMousePressed = false;
 	bool bFiestaMode = false;

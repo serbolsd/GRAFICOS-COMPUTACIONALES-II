@@ -380,6 +380,7 @@
     <ClCompile Include="CDeviceContext.cpp" />
     <ClCompile Include="CLayout.cpp" />
     <ClCompile Include="CManager.cpp" />
+    <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CPixelShader.cpp" />
     <ClCompile Include="CRenderTarget.cpp" />
@@ -408,6 +409,7 @@
     <ClInclude Include="CDeviceContext.h" />
     <ClInclude Include="CLayout.h" />
     <ClInclude Include="CManager.h" />
+    <ClInclude Include="CMaterial.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CPixelShader.h" />
     <ClInclude Include="CRenderTarget.h" />

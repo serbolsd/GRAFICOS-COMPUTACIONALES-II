@@ -119,7 +119,8 @@ void CManager::chargeMesh()
 {
 #ifdef DX
 	//m_device.model = aiImportFile("Dwarf/dwarf.x", aiProcessPreset_TargetRealtime_MaxQuality);
-	m_device.model = aiImportFile("dwarf/dwarfWithEffectInstance.x", aiProcessPreset_TargetRealtime_MaxQuality);
+	m_device.model = aiImportFile("Scene/Scene.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+	//m_device.model = aiImportFile("dwarf/dwarfWithEffectInstance.x", aiProcessPreset_TargetRealtime_MaxQuality);
 
 	for (unsigned int i = 0; i < m_device.model->mNumMeshes; i+=(unsigned int)1)
 	{
@@ -130,64 +131,26 @@ void CManager::chargeMesh()
 		for (std::uint32_t faceIdx = 0u; faceIdx < m_device.model->mMeshes[i]->mNumFaces; faceIdx++)
 		{
 			//assert(m_device.model->mMeshes[faceIdx]->mFaces->mNumIndices == 3u);
-			indis.push_back(m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[2u]);
-			indis.push_back(m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[1u]);
 			indis.push_back(m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[0u]);
+			indis.push_back(m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[1u]);
+			indis.push_back(m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[2u]);
 		}
-		m_meshes[i].meshRead(m_device.model->mMeshes[i]->mNumVertices, (m_device.model->mMeshes[i]->mNumFaces)*3, m_device.model->mMeshes[i]->mVertices,m_device.model->mMeshes[i]->mNormals, m_device.model->mMeshes[i]->mTextureCoords[0], indis);
-	//m_meshes[i].indicesss = m_device.model->mMeshes[i]->mFaces->mIndices;
+		m_meshes[i].meshRead(m_device.model->mMeshes[i]->mNumVertices, (m_device.model->mMeshes[i]->mNumFaces) * 3, m_device.model->mMeshes[i]->mVertices, m_device.model->mMeshes[i]->mNormals, m_device.model->mMeshes[i]->mTextureCoords[0], m_device.model->mMeshes[i]->mTangents, indis);
+		//m_meshes[i].indicesss = m_device.model->mMeshes[i]->mFaces->mIndices;
 		readTextureMesh(i);
 	}
-
-	//m_device.model = aiImportFile("edi.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	m_device.model = aiImportFile("cacahuate.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("Dwarf/DwarfWithEffectInstance.x", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("Scene/Scene.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model=aiImportFileEx("Dwarf/dwarf.x",0, 0);
-	for (unsigned int i = 0; i < m_device.model->mNumMeshes; i += (unsigned int)1)
-	{
-		// for each mesh, i create a new mesh object
-		CMesh newmesh;
-		//newmesh.traslateX = -10;
-		//newmesh.bescalar = true;
-		m_meshes2.push_back(newmesh);
-		//i gen de vertex array and bind it
-		
-
-
-		std::vector <std::uint32_t> indis;
-		indis.reserve(m_device.model->mMeshes[i]->mNumFaces * 3);
-
-		for (std::uint32_t faceIdx = 0u; faceIdx < m_device.model->mMeshes[i]->mNumFaces; faceIdx++)
-		{
-			//get the indexes of the vertices
-			uint32_t ind1 = (m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[0u]);
-			uint32_t ind2 = (m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[1u]);
-			uint32_t ind3 = (m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[2u]);
-
-			//I organize the indexes of the vertices
-			indis.push_back(ind1);
-			indis.push_back(ind2);
-			indis.push_back(ind3);
-		}
-		//this i create the buffer vertex and index
-		m_meshes2[i].meshRead(m_device.model->mMeshes[i]->mNumVertices, (m_device.model->mMeshes[i]->mNumFaces) * 3, m_device.model->mMeshes[i]->mVertices, m_device.model->mMeshes[i]->mNormals, m_device.model->mMeshes[i]->mTextureCoords[0], indis);
-		//m_meshes2[i].texName = "UV_EDIFICIO_COLOR.png";
-		m_meshes2[i].texName = "UV_SUPERCACAHUATE_COLOR.png";
-		m_meshes2[i].loadText(m_device.m_pd3dDevice);
-}
 #elif OPENGL
 	//load model data
 	//m_device.model = aiImportFile("Wolf_One_x.x", aiProcessPreset_TargetRealtime_MaxQuality);
-	m_device.model = aiImportFile("Dwarf/dwarf.x", aiProcessPreset_TargetRealtime_MaxQuality);
+	//m_device.model = aiImportFile("ninjaHead.obj", aiProcessPreset_TargetRealtime_MaxQuality);
 	//m_device.model = aiImportFile("Dwarf/DwarfWithEffectInstance.x", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("Scene/Scene.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+	m_device.model = aiImportFile("Scene/Scene.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
 	//m_device.model=aiImportFileEx("Dwarf/dwarf.x",0, 0);
 	for (unsigned int i = 0; i < m_device.model->mNumMeshes; i += (unsigned int)1)
 	{
 		// for each mesh, i create a new mesh object
 		CMesh newmesh;
-		newmesh.traslateX = 30;
+		//newmesh.traslateX = 30;
 		m_meshes.push_back(newmesh);
 		//i gen de vertex array and bind it
 		glGenVertexArrays(1, &m_meshes[i].VertexArrayID);
@@ -210,49 +173,13 @@ void CManager::chargeMesh()
 			indis.push_back(ind3);
 		}
 		//this i create the buffer vertex and index
-		m_meshes[i].meshRead(m_device.model->mMeshes[i]->mNumVertices, (m_device.model->mMeshes[i]->mNumFaces) * 3, m_device.model->mMeshes[i]->mVertices, m_device.model->mMeshes[i]->mNormals, m_device.model->mMeshes[i]->mTextureCoords[0], indis);
+		m_meshes[i].meshRead(m_device.model->mMeshes[i]->mNumVertices, (m_device.model->mMeshes[i]->mNumFaces) * 3, m_device.model->mMeshes[i]->mVertices, m_device.model->mMeshes[i]->mNormals, m_device.model->mMeshes[i]->mTextureCoords[0], m_device.model->mMeshes[i]->mTangents, indis);
 		glBindVertexArray(0);
-		readTextureMesh(i);
+		//readTextureMesh(i);
+		//readNormTextureMesh(i);
 	}
-	m_device.model = aiImportFile("edi.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("Dwarf/DwarfWithEffectInstance.x", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("Scene/Scene.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model=aiImportFileEx("Dwarf/dwarf.x",0, 0);
-	for (unsigned int i = 0; i < m_device.model->mNumMeshes; i += (unsigned int)1)
-	{
-		// for each mesh, i create a new mesh object
-		CMesh newmesh;
-		newmesh.traslateX = -30;
-		newmesh.bescalar = false;
-		//newmesh.rotateOff = false;
-		
-		m_meshes2.push_back(newmesh);
-		//i gen de vertex array and bind it
-		glGenVertexArrays(1, &m_meshes[i].VertexArrayID);
-		glBindVertexArray(m_meshes[i].VertexArrayID);
-
-
-		std::vector <std::uint32_t> indis;
-		indis.reserve(m_device.model->mMeshes[i]->mNumFaces * 3);
-
-		for (std::uint32_t faceIdx = 0u; faceIdx < m_device.model->mMeshes[i]->mNumFaces; faceIdx++)
-		{
-			//get the indexes of the vertices
-			uint32_t ind1 = (m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[0u]);
-			uint32_t ind2 = (m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[1u]);
-			uint32_t ind3 = (m_device.model->mMeshes[i]->mFaces[faceIdx].mIndices[2u]);
-
-			//I organize the indexes of the vertices
-			indis.push_back(ind1);
-			indis.push_back(ind2);
-			indis.push_back(ind3);
-		}
-		//this i create the buffer vertex and index
-		m_meshes2[i].meshRead(m_device.model->mMeshes[i]->mNumVertices, (m_device.model->mMeshes[i]->mNumFaces) * 3, m_device.model->mMeshes[i]->mVertices, m_device.model->mMeshes[i]->mNormals, m_device.model->mMeshes[i]->mTextureCoords[0], indis);
-		glBindVertexArray(0);
-		m_meshes2[i].texName = "UV_EDIFICIO_COLOR.png";
-		m_meshes2[i].loadText(640, 480);
-	}
+	m_meshes[0].texName = "Toad_n.tga";
+	m_meshes[0].loadNormalText(640, 480);
 #endif // !DX
 }
 void CManager::readTextureMesh(int i)
@@ -277,6 +204,31 @@ void CManager::readTextureMesh(int i)
 
 	
 }
+void CManager::readNormTextureMesh(int i)
+{
+
+	const aiMaterial* pMaterial = m_device.model->mMaterials[m_device.model->mMeshes[i]->mMaterialIndex];
+
+	//m_Textures[i] = NULL;
+	//if (pMaterial->GetTextureCount(aiTextureType_NORMALS) > 0) {
+		aiString Path;
+
+		if (pMaterial->GetTexture(aiTextureType_NORMALS, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+			m_meshes[i].texName += (std::string) Path.data;
+		}
+		m_meshes[i].texName ="Toad_n.tga";
+#ifdef DX
+		m_meshes[i].loadText(m_device.m_pd3dDevice);
+#elif OPENGL
+		//create the texture
+		m_meshes[i].loadNormalText(640, 480);
+#endif // !DX
+	//}
+
+
+}
+
+
 
 void CManager::ReadPantalla()
 {
@@ -303,7 +255,7 @@ void CManager::ReadPantalla()
 		indis.push_back(ind3);
 	}
 	//this i create the buffer vertex and index
-	m_mesh.meshRead(m_device.model->mMeshes[0]->mNumVertices, (m_device.model->mMeshes[0]->mNumFaces) * 3, m_device.model->mMeshes[0]->mVertices, m_device.model->mMeshes[0]->mNormals, m_device.model->mMeshes[0]->mTextureCoords[0], indis);
+	//m_mesh.meshRead(m_device.model->mMeshes[0]->mNumVertices, (m_device.model->mMeshes[0]->mNumFaces) * 3, m_device.model->mMeshes[0]->mVertices, m_device.model->mMeshes[0]->mNormals, m_device.model->mMeshes[0]->mTextureCoords[0], indis);
 	//glBindVertexArray(0);
 
 }
@@ -443,8 +395,8 @@ bool CManager::DInitDevice(HRESULT &hr, const HWND& hWnd)
 	//Create vertex buffer
 	chargeMesh();
 	
-	ReadPantalla();
-	m_hand.mesh_cube();
+	//ReadPantalla();
+	//m_hand.mesh_cube();
 	
 	
 	//DcreateVertexBuffer(m_mesh.m_numTries);
@@ -810,10 +762,12 @@ void CManager::initCamera()
 {
 #ifdef DX
 //	Sleep(10);
-	m_camera1.setEye(-9.03572083f, -0.626059771f, 7.06155205f,0.0f);
-	m_camera1.setAt(-7.03588009f, -0.364167482f, 2.44950199f,0.0f);
-	m_camera1.setUp(0.0242675878f, 0.998638034f, -0.0461842977f,0.0f);
-	
+	//m_camera1.setEye(-9.03572083f, -0.626059771f, 7.06155205f,0.0f);
+	//m_camera1.setAt(-7.03588009f, -0.364167482f, 2.44950199f,0.0f);
+	//m_camera1.setUp(0.0242675878f, 0.998638034f, -0.0461842977f,0.0f);
+	m_camera1.setEye(0, 2, 5, 0);
+	m_camera1.setAt(0.f, 2.0f, 0.0f, 0);
+	m_camera1.setUp(0.0f, 1.0f, 0.0f, 0);
 	m_camera1.setView();
 	m_deviceContext.m_pImmediateContext->UpdateSubresource(m_buffers.m_pCBNeverChanges, 0, NULL, &m_camera1.m_cbNeverChanges, 0, 0);
 
@@ -830,9 +784,10 @@ void CManager::initCamera()
 	//camera.setEye(0, 0, -6,0);
 	//camera.setAt(0.f, 0.0f, 0.0f,0);
 	//camera.setUp(0.0f, 1.0f, 0.0f,0);
-	camera.setEye(0, 0, 80, 0);
-	camera.setAt(0.f, 0.0f, 0.0f, 0);
+	camera.setEye(0, 2, 5, 0);
+	camera.setAt(0.f, 2.0f, 0.0f, 0);
 	camera.setUp(0.0f, 1.0f, 0.0f, 0);
+	camera.cameraSpeedRotation = .2;
 	//with the elementes i create the matriz
 	camera.setView();
 	//with the size of the window, i create de mat projection 
@@ -1152,6 +1107,39 @@ void CManager::changeSpeed(unsigned char key)
 	}
 }
 #endif // !DX
+void CManager::changeSpecularPower(int x)
+{
+	float vel;
+#ifdef DX
+	vel = .1;
+#elif OPENGL
+	vel = 1.f;
+#endif // DX
+	
+	if (x==1)
+	{
+		SPpower.x+=vel;
+		SPpower.y+=vel;
+		SPpower.z+=vel;
+		SPpower.w+=vel;
+	}
+	else
+	{
+		SPpower.x -= vel;
+		SPpower.y -= vel;
+		SPpower.z -= vel;
+		SPpower.w -= vel;
+	}
+	if (SPpower.x<=spMin)
+	{
+		SPpower = { spMin,spMin,spMin,spMin };
+	}
+	if (SPpower.x >= spMaxi)
+	{
+		SPpower = { spMaxi,spMaxi,spMaxi,spMaxi };
+	}
+
+}
 
 
 #ifdef OPENGL
@@ -1192,70 +1180,6 @@ void CManager::initDevice()
 	//in the funtion i gen a bind vertexArray
 	glBindVertexArray(0);
 	//load the texture
-	//loadTexture();
-	//CMesh newmesh;
-	m_mesh.isquad = true;
-	//m_mesh.push_back(newmesh);
-	m_mesh.traslateZ=70;
-	m_device.model = aiImportFile("SAQ.obj", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("cube.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//i gen de vertex array and bind it
-	glGenVertexArrays(1, &m_mesh.VertexArrayID);
-	glBindVertexArray(m_mesh.VertexArrayID);
-
-	std::vector <std::uint32_t> indis;
-	indis.reserve(m_device.model->mMeshes[0]->mNumFaces * 3);
-
-	for (std::uint32_t faceIdx = 0u; faceIdx < m_device.model->mMeshes[0]->mNumFaces; faceIdx++)
-	{
-		//get the indexes of the vertices
-		uint32_t ind1 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[0u]);
-		uint32_t ind2 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[1u]);
-		uint32_t ind3 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[2u]);
-
-		//I organize the indexes of the vertices
-		indis.push_back(ind1);
-		indis.push_back(ind2);
-		indis.push_back(ind3);
-	}
-	//this i create the buffer vertex and index
-	m_mesh.meshRead(m_device.model->mMeshes[0]->mNumVertices, (m_device.model->mMeshes[0]->mNumFaces) * 3, m_device.model->mMeshes[0]->mVertices, m_device.model->mMeshes[0]->mNormals, m_device.model->mMeshes[0]->mTextureCoords[0], indis);
-	glBindVertexArray(0);
-
-	//CMesh newmesh;
-
-	//m_hands.isquad = true;
-	//m_hands.traslateZ =0;
-	//m_hands.escalar = .1;
-	//m_hands.traslateY = 0;
-	//m_hands.posz = 0;
-	//m_meshesNoSegurity.push_back(newmesh);
-	m_device.model = aiImportFile("cube.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("hand.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("edi.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//m_device.model = aiImportFile("cube.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	//i gen de vertex array and bind it
-	glGenVertexArrays(1, &m_hand.VertexArrayID);
-	glBindVertexArray(m_hand.VertexArrayID);
-
-
-	std::vector <std::uint32_t> indis2;
-	indis2.reserve(m_device.model->mMeshes[0]->mNumFaces * 3);
-
-	for (std::uint32_t faceIdx = 0u; faceIdx < m_device.model->mMeshes[0]->mNumFaces; faceIdx++)
-	{
-		//get the indexes of the vertices
-		uint32_t ind1 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[0u]);
-		uint32_t ind2 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[1u]);
-		uint32_t ind3 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[2u]);
-
-		//I organize the indexes of the vertices
-		indis2.push_back(ind1);
-		indis2.push_back(ind2);
-		indis2.push_back(ind3);
-	}
-	//this i create the buffer vertex and index
-	m_hand.meshRead(m_device.model->mMeshes[0]->mNumVertices, (m_device.model->mMeshes[0]->mNumFaces) * 3, m_device.model->mMeshes[0]->mVertices, m_device.model->mMeshes[0]->mNormals, m_device.model->mMeshes[0]->mTextureCoords[0], indis2);
 	glBindVertexArray(0);
 
 	glGenTextures(1, &renderedTexture);
@@ -1316,9 +1240,6 @@ void CManager::initDevice()
 		cout << "ERROR CREATE RENDER TARGET";
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	m_mesh.m_texture.m_textureID = renderedTexture2;
 	//init camera
 	initCamera();
 	initCamera2();

@@ -150,7 +150,7 @@ void CMesh::mesh_pantalla()
 #endif // DX
 }
 
-void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVector3D*& normals,  aiVector3D*&textcord, std::vector <std::uint32_t>& indis)
+void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVector3D*& normals,  aiVector3D*&textcord, aiVector3D*&tang, std::vector <std::uint32_t>& indis)
 {
 #ifdef DX
 
@@ -173,6 +173,9 @@ void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVe
 		m_vertex[i].Norm.x = normals[i].x;
 		m_vertex[i].Norm.y = normals[i].y;
 		m_vertex[i].Norm.z = normals[i].z;
+		m_vertex[i].Tan.x = tang[i].x;
+		m_vertex[i].Tan.y = tang[i].y;
+		m_vertex[i].Tan.z = tang[i].z;
 		//m_vertex[i].Norm.x = 0;
 		//m_vertex[i].Norm.y = 0;
 		//m_vertex[i].Norm.z = 0;
@@ -185,7 +188,7 @@ void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVe
 	}
 #elif OPENGL
 	numTris = numVertices;
-	buffer = new Vertex[numTris * 3];
+	buffer = new Vertex[numTris * 3*3];
 
 
 	for (int i = 0; i < numTris; i++)
@@ -203,6 +206,11 @@ void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVe
 		normalis.y = normals[i].y;
 		normalis.z = normals[i].z;
 		temp_normals.push_back(normalis);
+		
+		tangg.x = tang->x;
+		tangg.y = tang->y;
+		tangg.z = tang->z;
+		temp_tangs.push_back(tangg);
 
 	}
 	for (int i = 0; i < numIndices; i++)
@@ -228,7 +236,8 @@ void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVe
 		else
 			buffer[i].TexCoord = vec2(temp_uvs[vertexIndex].x, -temp_uvs[vertexIndex].y);
 		buffer[i].Normals = temp_normals[vertexIndex];
-
+		buffer[i].tangents = temp_tangs[vertexIndex];
+	
 	}
 	//for (int i = 0; i < uvIndices.size(); i++)
 	//{
@@ -242,6 +251,7 @@ void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVe
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 
 	// Specify the location and format of the position portion of the vertex buffer.
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -273,7 +283,15 @@ void CMesh::meshRead(int numVertices, int numIndices,  aiVector3D*& vertex, aiVe
 		sizeof(Vertex),                    // Paso
 		(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
 	);
-
+	glVertexAttribPointer(
+		3,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
+		3,                  // tamaño
+		GL_FLOAT,           // tipo
+		GL_FALSE,           // normalizado?
+		sizeof(Vertex),                    // Paso
+		(unsigned char*)NULL + (8 * sizeof(float))            // desfase del buffer
+	);
+	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
@@ -364,6 +382,48 @@ void CMesh::loadText(int width, int height)
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &m_texture.m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_texture.m_textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	//unsigned char* data = SOIL_load_image("imagen.png", &m_tex.width, &m_tex.height, 0, SOIL_LOAD_RGBA);
+	//unsigned char* data = SOIL_load_image("axe.png", &m_tex.width, &m_tex.height, 0, SOIL_LOAD_RGBA);
+	//unsigned char* data = SOIL_load_image(pngextencion.c_str(), &m_tex.width, &m_tex.height, 0, SOIL_LOAD_RGBA);
+	int m_width, m_height;
+	unsigned char* data = SOIL_load_image(pngextencion.c_str(), &m_width, &m_height, 0, SOIL_LOAD_RGBA);
+	if (!data)
+	{
+		cout << "can*t load texture";
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_tex.height, 768, 0, GL_DEPTH_COMPONENT, GL_FLOAT, data);
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, width, height);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(data);
+
+	//	m_tex.m_textureID = LoadGLTexture((char*)texName.c_str(), width, height);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+
+void CMesh::loadNormalText(int width, int height)
+{
+
+	char *token = NULL;
+	char *nextToken = NULL;
+	token = strtok_s((char *)texName.c_str(), ".", &nextToken);
+	//token = (char *)texName.c_str();
+	//token +=(char *) pngextencion.c_str();
+	string pngextencion = token;
+	pngextencion += ".png";
+
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &textures.normalID);
+	glBindTexture(GL_TEXTURE_2D, textures.normalID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

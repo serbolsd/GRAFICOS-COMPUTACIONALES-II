@@ -23,6 +23,7 @@ struct SimpleVertex
 	XMFLOAT3 Pos;
 	XMFLOAT2 Tex;
 	XMFLOAT3 Norm;
+	XMFLOAT3 tan;
 };
 
 struct CBNeverChanges
@@ -43,8 +44,10 @@ struct CBChangesEveryFrame
 	XMFLOAT4 vViewPosition;
 	//float SpecularPower;                // Specular pow factor
 	XMFLOAT4 SpecularColor;               // Specular color (sRGBA)
-	XMFLOAT4 DifuseColor;
+	XMFLOAT4 DifuseColor;                 // Difuse color (sRGBA)
+	XMFLOAT4 AmbientalColor;
 	XMFLOAT4 SPpower;
+	XMFLOAT4 KDAS;
 };
 
 
@@ -69,6 +72,7 @@ struct Vertex
 	vec3 Position;												/*!< Vertex position */
 	vec2 TexCoord;
 	vec3 Normals;
+	vec3 tangs;
 };
 void timer(int value)
 {
@@ -218,6 +222,14 @@ void keyBoardKey(unsigned char key, int x, int y)
 
 		}
 	}
+	if (key == 'z' || key == 'Z' )
+	{
+		g_manager.changeSpecularPower(0);
+	}
+	if (key == 'X' || key == 'x')
+	{
+		g_manager.changeSpecularPower(1);
+	}
 	glutPostRedisplay();
 }
 
@@ -357,8 +369,11 @@ int main(int argc, char* argv[])
 	ImGui_ImplOpenGL3_Shutdown();
 	//ImGui_ImplFreeGLUT_Shutdown();
 	ImGui::DestroyContext();
-	
-	
+	for (size_t i = 0; i < g_manager.m_meshes.size(); i++)
+	{
+		delete g_manager.m_meshes[i].buffer;
+
+	}
 	
 	exit(EXIT_SUCCESS);
 }
@@ -561,7 +576,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
             PostQuitMessage( 0 );
             break;
 		case WM_KEYFIRST:
-			if (wParam=='X')
+			if (wParam=='Y')
 			{
 				g_manager.textureChange(g_manager.m_texture.m_pTextureRV);
 			}
@@ -624,6 +639,15 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 						g_manager.m_meshes[i].bescalar = true;
 
 				}
+			}
+			else if (wParam == 'Z')
+			{
+				g_manager.changeSpecularPower(0);
+			}
+			else if (wParam == 'X')
+			{
+				g_manager.changeSpecularPower(1);
+
 			}
 			break;
 		//case WM_LBUTTONDOWN:
@@ -719,7 +743,7 @@ void renderSegurityCam()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	g_manager.m_camera[g_manager.m_cameraNum].setView();
-	g_manager.bRotationMesh = true;
+	g_manager.bRotationMesh = false;
 	for (int i = 0; i < g_manager.m_meshes.size(); i++)
 	{
 		if (g_manager.bRotationMesh)
@@ -771,58 +795,7 @@ void renderSegurityCam()
 
 	}
 	g_manager.bRotationMesh = false;
-	for (int i = 0; i < g_manager.m_meshes2.size(); i++)
-	{
-		//if (g_manager.bRotationMesh)
-		//{
-		//	g_manager.m_meshes2[i].rotation(0);
-		//}
-
-		g_manager.m_meshes2[i].escaleModel();
-		g_manager.m_meshes2[i].voidescalar();
-		MatrixID = glGetUniformLocation(g_manager.programID, "MM");
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &g_manager.m_meshes2[i].matModel[0][0]);
-
-		//lBindTexture(GL_TEXTURE_2D, m_TextureArray.at(i)->m_GLHandleID);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes2[i].vertexbuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-		if (g_manager.m_meshes2[i].m_texture.m_textureID != 0)
-		{
-			GLuint texID = glGetUniformLocation(g_manager.programID, "renderedTexture");
-
-			glUniform1i(texID, g_manager.m_meshes2[i].m_texture.m_textureID);
-			glActiveTexture(GL_TEXTURE0 + g_manager.m_meshes2[i].m_texture.m_textureID);
-			//glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].uvBuffer);
-			//glActiveTexture(g_manager.m_meshes[i].m_tex.m_textureID);
-			glBindTexture(GL_TEXTURE_2D, g_manager.m_meshes2[i].m_texture.m_textureID);
-			//glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, g_manager.WindowSize.m_Width, g_manager.WindowSize.m_Height);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
-		}
-
-
-		glVertexAttribPointer(
-			2,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
-			3,                  // tamaño
-			GL_FLOAT,           // tipo
-			GL_FALSE,           // normalizado?
-			sizeof(Vertex),                    // Paso
-			(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
-		);
-
-
-		glDrawArrays(GL_TRIANGLES, 0, g_manager.m_meshes[i].numTris * 3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
-
-
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(1);
-
-		glDisableVertexAttribArray(0);
-
-	}
+	
 #endif // DX
 }
 void renderFirtsPersonCam()
@@ -831,7 +804,7 @@ void renderFirtsPersonCam()
 
 
 	g_manager.m_camera[g_manager.m_cameraNum].setTransform();
-	g_manager.m_mesh.posx = -8;
+
 	float ClearColor[4] = { 0.50f, 0.0f, 0.60f, 1.0f }; // red, green, blue, alpha
 	g_manager.m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &g_manager.m_renderTargetV.m_pRenderTargetView, g_manager.m_renderTargetV.m_pDepthStencilView);
 	g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangeOnResize, 0, NULL, &g_manager.m_camera[g_manager.m_cameraNum].m_cbChangesOnResize, 0, 0);
@@ -856,9 +829,7 @@ void renderFirtsPersonCam()
 		, 0.0f, .010f, 0.0f, 0.0f
 		, 0.0f, 0.0f, .010f, 0.0f
 		, 0.0f, 0.0f, 0.00f, .10f);
-	g_manager.m_mesh.voidescalar();
 	Pantalla.vMeshColor = g_vMeshColorTri;
-	Pantalla.mWorld = transformPantalla* g_manager.m_mesh.Esmatris;
 	Pantalla.lightDir = g_manager.m_lightDir;
 	Pantalla.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
 	Pantalla.DifuseColor = g_manager.DifuseColor;
@@ -879,58 +850,13 @@ void renderFirtsPersonCam()
 	if (g_manager.m_buffers.m_pVertexBuffer) g_manager.m_buffers.m_pVertexBuffer->Release();
 	if (g_manager.m_buffers.m_pIndexBuffer)g_manager.m_buffers.m_pIndexBuffer->Release();
 
-	g_manager.m_deviceContext.m_pImmediateContext->PSSetShaderResources(0, 1, &g_manager.m_hand.m_texture.m_pTextureRV);
-
 
 	
-	//g_manager.m_mesh.mesh_pantalla();
-	g_manager.DcreateVertexBuffer(g_manager.m_hand.m_numTries);
-	//	DcreateVertexBuffer(3);
-	g_manager.m_device.InitData.pSysMem = g_manager.m_hand.m_vertex;
-	//g_manager.m_device.InitData.pSysMem = verticestri;
 	g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pVertexBuffer);
 	// Set vertex buffer
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
-	g_manager.m_deviceContext.m_pImmediateContext->IASetVertexBuffers(0, 1, &g_manager.m_buffers.m_pVertexBuffer, &stride, &offset);
-	// Create vertex buffer
-	g_manager.DcreateIndexBuffer(g_manager.m_hand.m_numIndex);
-	//DcreateIndexBuffer(3);
-	g_manager.m_device.InitData.pSysMem = g_manager.m_hand.m_index;
-	// g_manager.m_device.InitData.pSysMem = indicesTri;
-	g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pIndexBuffer);
-
-	// Set index buffer
-	g_manager.m_deviceContext.m_pImmediateContext->IASetIndexBuffer(g_manager.m_buffers.m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-	g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &hands, 0, 0);
-	g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_hand.m_numIndex, 0, 0);
-
-
-	g_manager.m_deviceContext.m_pImmediateContext->PSSetShaderResources(0, 1, &g_manager.shaderResourceViewMap);
-	//g_manager.m_mesh.mesh_pantalla();
-	g_manager.DcreateVertexBuffer(g_manager.m_mesh.m_numTries);
-	//	DcreateVertexBuffer(3);
-	g_manager.m_device.InitData.pSysMem = g_manager.m_mesh.m_vertex;
-	//g_manager.m_device.InitData.pSysMem = verticestri;
-	g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pVertexBuffer);
-	// Set vertex buffer
-	stride = sizeof(SimpleVertex);
-	offset = 0;
-	g_manager.m_deviceContext.m_pImmediateContext->IASetVertexBuffers(0, 1, &g_manager.m_buffers.m_pVertexBuffer, &stride, &offset);
-	// Create vertex buffer
-	g_manager.DcreateIndexBuffer(g_manager.m_mesh.m_numIndex);
-	//DcreateIndexBuffer(3);
-	g_manager.m_device.InitData.pSysMem = g_manager.m_mesh.m_index;
-	// g_manager.m_device.InitData.pSysMem = indicesTri;
-	g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pIndexBuffer);
-
-	// Set index buffer
-	g_manager.m_deviceContext.m_pImmediateContext->IASetIndexBuffer(g_manager.m_buffers.m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-	g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &Pantalla, 0, 0);
-	g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_mesh.m_numIndex, 0, 0);
-	//XMMATRIX mvp = g_manager.m_camera[g_manager.m_cameraNum].m_View*g_manager.m_camera[g_manager.m_cameraNum].m_Projection;
+//XMMATRIX mvp = g_manager.m_camera[g_manager.m_cameraNum].m_View*g_manager.m_camera[g_manager.m_cameraNum].m_Projection;
 	XMMATRIX mvp = g_manager.m_camera[g_manager.m_cameraNum].m_View;
 	drawnm_meshes(mvp);
 #elif OPENGL
@@ -992,107 +918,7 @@ void renderFirtsPersonCam()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	g_manager.m_hand.escaleModel();
-	//mat4 wordHands = worldMatrix* g_manager.m_camera[0].camTransform;
-	mat4 wordHands = worldMatrix;
-	//mat4 wordHands =  g_manager.m_camera[0].camMatPos ;
-	g_manager.m_hand.voidescalar();
-	MatrixID = glGetUniformLocation(g_manager.programID, "WM");
-	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &wordHands[0][0]);
-
-
-	g_manager.m_hand.matModel *= g_manager.m_camera[0].camTransform;
-	g_manager.m_hand.matModel *= translate(vec3(0, 0, 0));
-	//g_manager.m_hands.matModel *=g_manager.m_camera[0].camMatRot;
-	//g_manager.m_hands.matModel;
-	MatrixID = glGetUniformLocation(g_manager.programID, "MM");
-	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &g_manager.m_hand.matModel[0][0]);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_hand.vertexbuffer);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-
-	GLuint texID = glGetUniformLocation(g_manager.programID, "renderedTexture");
-
-	glUniform1i(texID, g_manager.m_hand.m_texture.m_textureID);
-	glActiveTexture(GL_TEXTURE0 + g_manager.m_hand.m_texture.m_textureID);
-	//glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].uvBuffer);
-	//glActiveTexture(g_manager.m_meshes[i].m_tex.m_textureID);
-	glBindTexture(GL_TEXTURE_2D, g_manager.m_hand.m_texture.m_textureID);
-	//glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, g_manager.WindowSize.m_Width, g_manager.WindowSize.m_Height);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
-
-
-	glVertexAttribPointer(
-		2,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
-		3,                  // tamaño
-		GL_FLOAT,           // tipo
-		GL_FALSE,           // normalizado?
-		sizeof(Vertex),                    // Paso
-		(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
-	);
-
-
-	glDrawArrays(GL_TRIANGLES, 0, g_manager.m_hand.numTris * 3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
-
-
-	glDisableVertexAttribArray(2); 
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(0);
-
-	MatrixID = glGetUniformLocation(g_manager.programID, "WM");
-	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &worldMatrix[0][0]);
-
-	for (int i = 0; i < 1; i++)
-	{
-		g_manager.m_mesh.escaleModel();
-
-		g_manager.m_mesh.voidescalar();
-		MatrixID = glGetUniformLocation(g_manager.programID, "MM");
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &g_manager.m_mesh.matModel[0][0]);
-		//lBindTexture(GL_TEXTURE_2D, m_TextureArray.at(i)->m_GLHandleID);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_mesh.vertexbuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-
-		GLuint texID = glGetUniformLocation(g_manager.programID, "renderedTexture");
-
-		glUniform1i(texID, g_manager.m_mesh.m_texture.m_textureID);
-		glActiveTexture(GL_TEXTURE0 + g_manager.m_mesh.m_texture.m_textureID);
-		//glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].uvBuffer);
-		//glActiveTexture(g_manager.m_meshes[i].m_tex.m_textureID);
-		glBindTexture(GL_TEXTURE_2D, g_manager.m_mesh.m_texture.m_textureID);
-		//glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, g_manager.WindowSize.m_Width, g_manager.WindowSize.m_Height);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
-
-
-
-
-		glVertexAttribPointer(
-			2,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
-			3,                  // tamaño
-			GL_FLOAT,           // tipo
-			GL_FALSE,           // normalizado?
-			sizeof(Vertex),                    // Paso
-			(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
-		);
-
-
-		glDrawArrays(GL_TRIANGLES, 0, g_manager.m_mesh.numTris * 3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
-
-
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(1);
-
-		glDisableVertexAttribArray(0);
-
-	}
+	
 
 	g_manager.bRotationMesh = false;
 	for (int i = 0; i < g_manager.m_meshes.size(); i++)
@@ -1106,17 +932,17 @@ void renderFirtsPersonCam()
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 		glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].vertexbuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
 
-		GLuint texID = glGetUniformLocation(g_manager.programID, "renderedTexture");
-
-		glUniform1i(texID, g_manager.m_meshes[i].m_texture.m_textureID);
-		glActiveTexture(GL_TEXTURE0 + g_manager.m_meshes[i].m_texture.m_textureID);
+		GLuint texID = glGetUniformLocation(g_manager.programID, "normalTexture");
+		glUniform1i(texID, g_manager.m_meshes[0].textures.normalID);
+		glActiveTexture(GL_TEXTURE0 + g_manager.m_meshes[0].textures.normalID);
 		//glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].uvBuffer);
 		//glActiveTexture(g_manager.m_meshes[i].m_tex.m_textureID);
-		glBindTexture(GL_TEXTURE_2D, g_manager.m_meshes[i].m_texture.m_textureID);
+		glBindTexture(GL_TEXTURE_2D, g_manager.m_meshes[0].textures.normalID);
 		//glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, g_manager.WindowSize.m_Width, g_manager.WindowSize.m_Height);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
 
@@ -1128,62 +954,13 @@ void renderFirtsPersonCam()
 			sizeof(Vertex),                    // Paso
 			(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
 		);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (8 * sizeof(float)));
+
+		glDrawArrays(GL_TRIANGLES, 0, g_manager.m_meshes[i].numTris * 3*3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
 
 
-		glDrawArrays(GL_TRIANGLES, 0, g_manager.m_meshes[i].numTris * 3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
-
-
+		glDisableVertexAttribArray(3);
 		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(1);
-
-		glDisableVertexAttribArray(0);
-
-	}
-	g_manager.bRotationMesh = false;
-	for (int i = 0; i < g_manager.m_meshes2.size(); i++)
-	{
-		//if (g_manager.bRotationMesh)
-		//{
-		//	g_manager.m_meshes2[i].rotation(0);
-		//}
-
-		g_manager.m_meshes2[i].escaleModel();
-		g_manager.m_meshes2[i].voidescalar();
-		MatrixID = glGetUniformLocation(g_manager.programID, "MM");
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &g_manager.m_meshes2[i].matModel[0][0]);
-
-		//lBindTexture(GL_TEXTURE_2D, m_TextureArray.at(i)->m_GLHandleID);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes2[i].vertexbuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-
-		GLuint texID = glGetUniformLocation(g_manager.programID, "renderedTexture");
-
-		glUniform1i(texID, g_manager.m_meshes2[i].m_texture.m_textureID);
-		glActiveTexture(GL_TEXTURE0 + g_manager.m_meshes2[i].m_texture.m_textureID);
-		//glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].uvBuffer);
-		//glActiveTexture(g_manager.m_meshes[i].m_tex.m_textureID);
-		glBindTexture(GL_TEXTURE_2D, g_manager.m_meshes2[i].m_texture.m_textureID);
-		//glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, g_manager.WindowSize.m_Width, g_manager.WindowSize.m_Height);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
-
-		glVertexAttribPointer(
-			2,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
-			3,                  // tamaño
-			GL_FLOAT,           // tipo
-			GL_FALSE,           // normalizado?
-			sizeof(Vertex),                    // Paso
-			(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
-		);
-
-
-		glDrawArrays(GL_TRIANGLES, 0, g_manager.m_meshes2[i].numTris * 3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
-
-
-		glDisableVertexAttribArray(2); 
 		glDisableVertexAttribArray(1);
 
 		glDisableVertexAttribArray(0);
@@ -1199,7 +976,7 @@ void renderFirtsPersonCam()
 
 
 	float fps = 1000.0f / ImGui::GetIO().Framerate;
-	std::string frames = "fps: " + std::to_string(ImGui::GetIO().Framerate) + "\n" + "Num Meshse:" + std::to_string(g_manager.m_meshes.size()+g_manager.m_meshes2.size()+2);
+	std::string frames = "fps: " + std::to_string(ImGui::GetIO().Framerate) + "\n" + "Num Meshse:" + std::to_string(g_manager.m_meshes.size());
 	ImGui::Text(frames.c_str());
 	ImGui::End();
 	ImGui::Render();
@@ -1313,14 +1090,6 @@ void Render()
 	//cb.mWorld = XMMATRIX( move );
 	//cb.mWorld = (move);
 	cb.mWorld = (transform)*XMMatrixRotationY(t);
-
-	cb.vMeshColor = g_vMeshColor;
-	cb.lightDir = g_manager.m_lightDir;
-	Tri.vMeshColor = g_vMeshColorTri;
-	Tri.lightDir = g_manager.m_lightDir;
-	Pantalla.vMeshColor = g_vMeshColorTri;
-	Pantalla.mWorld = transformPantalla;
-	Pantalla.lightDir = g_manager.m_lightDir;
 	//
 	// General Recurse
 	//
@@ -1335,7 +1104,7 @@ void Render()
 	g_manager.m_deviceContext.m_pImmediateContext->PSSetSamplers(0, 1, &g_manager.m_texture.m_pSamplerLinear);
 	g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangeOnResize, 0, NULL, &g_manager.m_camera[g_manager.m_cameraNum].m_cbChangesOnResize, 0, 0);
 
-	renderSegurityCam();
+	//renderSegurityCam();
 
 	renderFirtsPersonCam();
 	
@@ -1348,7 +1117,7 @@ void Render()
 
 
 
-	std::string frames = "fps: " + std::to_string(ImGui::GetIO().Framerate) + "\n" + "Num Meshse:" + std::to_string(g_manager.m_meshes.size() + g_manager.m_meshes2.size() + 2);
+	std::string frames = "fps: " + std::to_string(ImGui::GetIO().Framerate) + "\n" + "Num Meshse:" + std::to_string(g_manager.m_meshes.size() );
 	ImGui::Text(frames.c_str());
 	ImGui::End();
 	ImGui::Render();
@@ -1368,9 +1137,14 @@ void Render()
 	glUniform4fv(DCID, 1, &g_manager.DifuseColor[0]);
 	GLuint SPID = glGetUniformLocation(g_manager.programID, "SP");
 	glUniform4fv(SPID, 1, &g_manager.SPpower[0]);
+	GLuint ACID = glGetUniformLocation(g_manager.programID, "AC");
+	glUniform4fv(ACID, 1, &g_manager.ambientColor[0]);
+	GLuint KDASID = glGetUniformLocation(g_manager.programID, "KDASL");
+	glUniform4fv(KDASID, 1, &g_manager.KDASL[0]);
+
 	checkWindowSize();
 	
-	renderSegurityCam();
+	//renderSegurityCam();
 	
 	renderFirtsPersonCam();
 	
@@ -1407,7 +1181,7 @@ void drawnm_meshes(XMMATRIX mvp)
 		g_manager.m_meshes[i].rotation(t);
 		CBChangesEveryFrame m_meshes;
 		if (g_manager.m_buffers.m_pVertexBuffer) g_manager.m_buffers.m_pVertexBuffer->Release();
-		if (g_manager.m_buffers.m_pIndexBuffer)g_manager.m_buffers.m_pIndexBuffer->Release();
+		//if (g_manager.m_buffers.m_pIndexBuffer) g_manager.m_buffers.m_pIndexBuffer->Release();
 		g_manager.m_deviceContext.m_pImmediateContext->PSSetShaderResources(0, 1, &g_manager.m_meshes[i].m_texture.m_pTextureRV);
 
 		//g_manager.m_mesh.mesh_pantalla();
@@ -1443,84 +1217,18 @@ void drawnm_meshes(XMMATRIX mvp)
 		m_meshes.vMeshColor = g_manager.color;
 		m_meshes.lightDir = g_manager.m_lightDir;
 
-		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
+		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_View._41,-g_manager.m_camera[g_manager.m_cameraNum].m_View._42,g_manager.m_camera[g_manager.m_cameraNum].m_View._43,g_manager.m_camera[g_manager.m_cameraNum].m_View._44};
 		m_meshes.DifuseColor = g_manager.DifuseColor;
 		m_meshes.SpecularColor = g_manager.SpecularColor;
 		m_meshes.SPpower = g_manager.SPpower;
+		m_meshes.AmbientalColor = g_manager.ambientColor;
+		m_meshes.KDAS = g_manager.KDAS;
 
 		g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &m_meshes, 0, 0);
 		g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_meshes[i].m_numIndex, 0, 0);
 	}
 
-	for (int i = 0; i < g_manager.m_meshes2.size(); i++)
-	{
-		static float t = 0.0f;
-		g_manager.m_meshes2[i].rotateOff = false;
-		g_manager.m_meshes2[i].posx = 2;
-		if (g_manager.m_deviceContext.m_driverType == D3D_DRIVER_TYPE_REFERENCE && !g_manager.m_meshes2[i].rotateOff)
-		{
-			t += (float)XM_PI * 0.0125f;
-			tim = t;
-		}
-		else if (!g_manager.m_meshes2[i].rotateOff)
-		{
-			//static DWORD dwTimeStart = 0;
-			//DWORD dwTimeCur = GetTickCount();
-			//if (dwTimeStart == 0)
-			//	dwTimeStart = dwTimeCur;
-			//t = (dwTimeCur - dwTimeStart) / 1000.0f;
-			t += (float)XM_PI * 0.0005f;
-			tim = t;
-		}
-		g_manager.m_meshes2[i].rotation(t);
-		CBChangesEveryFrame m_meshes;
-		if (g_manager.m_buffers.m_pVertexBuffer) g_manager.m_buffers.m_pVertexBuffer->Release();
-		if (g_manager.m_buffers.m_pIndexBuffer)g_manager.m_buffers.m_pIndexBuffer->Release();
-		g_manager.m_deviceContext.m_pImmediateContext->PSSetShaderResources(0, 1, &g_manager.m_meshes2[i].m_texture.m_pTextureRV);
-
-		//g_manager.m_mesh.mesh_pantalla();
-		g_manager.DcreateVertexBuffer(g_manager.m_meshes2[i].m_numTries);
-		//	DcreateVertexBuffer(3);
-		g_manager.m_device.InitData.pSysMem = g_manager.m_meshes2[i].m_vertex;
-		//g_manager.m_device.InitData.pSysMem = verticestri;
-		g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pVertexBuffer);
-
-		// Set vertex buffer
-		UINT stride = sizeof(SimpleVertex);
-		UINT offset = 0;
-		g_manager.m_deviceContext.m_pImmediateContext->IASetVertexBuffers(0, 1, &g_manager.m_buffers.m_pVertexBuffer, &stride, &offset);
-
-		// Create index buffer
-		// Create vertex buffer
-		g_manager.DcreateIndexBuffer(g_manager.m_meshes2[i].m_numIndex);
-		//DcreateIndexBuffer(3);
-		g_manager.m_device.InitData.pSysMem = g_manager.m_meshes2[i].m_index;
-		// g_manager.m_device.InitData.pSysMem = indicesTri;
-		g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pIndexBuffer);
-		// Set index buffer
-		g_manager.m_deviceContext.m_pImmediateContext->IASetIndexBuffer(g_manager.m_buffers.m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-		RESULT = g_manager.m_meshes2[i].Esmatris*g_manager.m_meshes2[i].matrixRotation;
-		//m_meshes.mWorld = g_manager.m_meshes[i].Esmatris;
-		//m_meshes.mWorld *= g_manager.m_meshes[i].matrixRotation;
-		g_manager.m_meshes2[i].voidescalar();
-		m_meshes.mWorld = RESULT * g_manager.m_meshes2[i].Escar;
-		
-		//m_meshes.mWorld *= XMMatrixTranslation(1,0,0);
-		//m_meshes.mWorld *=mvp;
-		//m_meshes.mWorld = g_manager.m_meshes[i].Esmatris*g_manager.m_meshes[i].matrixRotation;
-		//m_meshes.vMeshColor = g_vMeshColorTri;
-		g_manager.fiesta();
-		m_meshes.vMeshColor = g_manager.color;
-		m_meshes.lightDir = g_manager.m_lightDir;
-
-		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_Eye.x,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.y,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.z,g_manager.m_camera[g_manager.m_cameraNum].m_Eye.w };
-		m_meshes.DifuseColor = g_manager.DifuseColor;
-		m_meshes.SpecularColor = g_manager.SpecularColor;
-		m_meshes.SPpower = g_manager.SPpower;
-
-		g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &m_meshes, 0, 0);
-		g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_meshes2[i].m_numIndex, 0, 0);
-	}
+	
 }
 #else
 #endif // !DX

@@ -95,7 +95,7 @@ public:
 	float m_width;
 	float m_height;
 
-	float cameraSpeedRotation = 0.5f;
+	float cameraSpeedRotation = .5f;
 	float m_speed = 0.50f;
 	POINT m_antePosCur;
 	POINT m_ActualPosCur;

@@ -58,6 +58,7 @@
     <ClInclude Include="imgui\imgui_impl_opengl3.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="CMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tutorial07.cpp" />
@@ -91,6 +92,7 @@
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tutorial07.fx">
