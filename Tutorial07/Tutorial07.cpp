@@ -1131,8 +1131,12 @@ void Render()
 	glUniform4fv(LDID, 1, &g_manager.ligthDir[0]);
 	GLuint VPID = glGetUniformLocation(g_manager.programID, "VP");
 	glUniform4fv(VPID, 1, &g_manager.m_camera[g_manager.m_cameraNum].eye[0]);
+	GLuint LPID = glGetUniformLocation(g_manager.programID, "LP");
+	glUniform4fv(LPID, 1, &g_manager.ligthPosition[0]);
 	GLuint SCID = glGetUniformLocation(g_manager.programID, "SC");
 	glUniform4fv(SCID, 1, &g_manager.SpecularColor[0]);
+	GLuint LPLQID = glGetUniformLocation(g_manager.programID, "LPLQ");
+	glUniform4fv(LPLQID, 1, &g_manager.SpecularColor[0]);
 	GLuint DCID = glGetUniformLocation(g_manager.programID, "DC");
 	glUniform4fv(DCID, 1, &g_manager.DifuseColor[0]);
 	GLuint SPID = glGetUniformLocation(g_manager.programID, "SP");

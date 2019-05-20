@@ -1,8 +1,8 @@
 #pragma once
 
 
-#define DX 2
-//#define OPENGL 3
+//#define DX 2
+#define OPENGL 3
 #include <vector>
 #include <string>
 #include <iostream>

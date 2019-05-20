@@ -26,6 +26,7 @@ uniform vec4 SP;//speular Power
 uniform vec4 KDASL;//const of difuse, ambiental and specular 
 uniform vec4 LPLQ;//LIGHT POINT LINEAR QUADRATIC 
 uniform vec4 SLCOC; //SPOTLIGHT CUTOFF OTHECUTOFF
+uniform vec4 LP;//light Position
 //uniform vec4 SDOC;
 
 layout(location = 0) out vec3 color;
@@ -38,7 +39,7 @@ void main()
 	//color = vec3( 1.0,0.5,0.3 );
 #else
 	#ifdef POINT_LIGHT
-		vec4 lightDirWS = -normalize(VP - wsPos);
+		vec4 lightDirWS = -normalize(LP - wsPos);
 	#else
 		vec4 lightDirWS = -normalize(LD);   /// calculate de light direction in world space
 	#endif

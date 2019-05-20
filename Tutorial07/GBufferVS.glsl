@@ -6,7 +6,7 @@
 #define VER_LIGTH
 //#define BLINN
 //#define CONE_LIGHT
-//#define POINT_LIGHT
+#define POINT_LIGHT
 
 layout(location = 0) in vec3 inVertexPosition;
 layout(location = 1) in vec2 inTexCoord;
@@ -28,6 +28,7 @@ uniform mat4 VM;//View Matrix
 uniform mat4 PM;//Projection Matrix
 uniform mat4 MM;//Model Matrxi
 uniform vec4 LD;//light Direction
+uniform vec4 LP;//light Position
 uniform vec4 VP;//View Position
 uniform vec4 SC;//Specular Color
 uniform vec4 DC;//Difuse Color
@@ -59,7 +60,7 @@ void main()
 
 	vec3 wsViewDir = -normalize((posWS.xyz - VP.xyz));// calculo la direcion en la que se esta viendo
 	#ifdef POINT_LIGHT
-		vec4 lightDirWS = -normalize(VP - posWS);
+		vec4 lightDirWS = -normalize(LP - posWS);
 	#else
 		vec4 lightDirWS = -normalize(VP - posWS);
 		//vec4 lightDirWS = -normalize(LD);   /// calculate de light direction in world space
@@ -78,31 +79,16 @@ void main()
 	#endif
 
 	#ifdef POINT_LIGHT
-			float dist = length(VP.xyz - inVertexPosition.xyz);
-			float lin = KDASL.w + (1 * dist);
-			float quad = (1 * (dist* dist));
+			float dist = length(LP.xyz - inVertexPosition.xyz);
+			float lin = KDASL.w+(LPLQ.x * dist);
+			float quad = (LPLQ.y * (dist* dist));
 			float attenuation = (1.0 / (lin + quad));
 			//float attenuation = 1;   /// calculate de light direction in world space
 	#else
-#ifdef BLINN
-		float teta = length(lightDirWS.xyz*length(wsReflect));
-#else//blin-phong
-		float teta = length(lightDirWS.xyz*length(wsHalf));
-#endif
-		//float dist = length(VP.xyz - inVertexPosition.xyz);
-		float epsi = .1 - .2;
-		float attenuation = (teta - .2) / epsi;
-		//float anglee = cos(max(dot(normalize(vec3(0,0,1)), normalize(lightDirWS.xyz)), 0.0));
-		//anglee = anglee/.1;
-		//float attenuation = anglee /5;
-		//float attenuation = 1;
-		//float teta = cos(wsLightDir*length(wsReflect));
-		//float epsi = cos(cutoff) - cos(othercut);
-		//float attenuation = (teta - othercut) / epsi;
-		//float attenuation = 1;   /// calculate de light direction in world space
+
 	#endif
 	vec3 difuse = KDASL.x* DC.xyz*wsNdl;
-	vec3 specular = KDASL.z*SC.xyz* SpecularFactor*attenuation;
+	vec3 specular = KDASL.z*SC.xyz* SpecularFactor/attenuation;
 	vec3 ambient = KDASL.y*(1.0 - wsNdl)*AC.xyz;
 	//colorfiesta = fiesta* NDLR;
 	//colorfiesta = NDLR*DC;
