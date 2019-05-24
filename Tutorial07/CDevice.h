@@ -84,7 +84,11 @@ public:
 		XMFLOAT4 DifuseColor;                 // Difuse color (sRGBA)
 		XMFLOAT4 AmbientalColor;
 		XMFLOAT4 SPpower;
-		XMFLOAT4 KDAS;
+		XMFLOAT4 KDASL;
+		XMFLOAT4 LPLQ;
+		XMFLOAT4 lightPosition;
+		XMFLOAT4 SLCOC;
+	
 	};
 	//struct CBChangesEveryFrameMarix
 	//{

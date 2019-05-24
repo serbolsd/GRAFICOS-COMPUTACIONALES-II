@@ -1182,6 +1182,31 @@ void CManager::initDevice()
 	//load the texture
 	glBindVertexArray(0);
 
+	m_device.model = aiImportFile("cube.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+	//m_device.model = aiImportFile("cube.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+	//i gen de vertex array and bind it
+	glGenVertexArrays(1, &m_mesh.VertexArrayID);
+	glBindVertexArray(m_mesh.VertexArrayID);
+
+	std::vector <std::uint32_t> indis;
+	indis.reserve(m_device.model->mMeshes[0]->mNumFaces * 3);
+
+	for (std::uint32_t faceIdx = 0u; faceIdx < m_device.model->mMeshes[0]->mNumFaces; faceIdx++)
+	{
+		//get the indexes of the vertices
+		uint32_t ind1 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[0u]);
+		uint32_t ind2 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[1u]);
+		uint32_t ind3 = (m_device.model->mMeshes[0]->mFaces[faceIdx].mIndices[2u]);
+
+		//I organize the indexes of the vertices
+		indis.push_back(ind1);
+		indis.push_back(ind2);
+		indis.push_back(ind3);
+	}
+	//this i create the buffer vertex and index
+	m_mesh.meshRead(m_device.model->mMeshes[0]->mNumVertices, (m_device.model->mMeshes[0]->mNumFaces) * 3, m_device.model->mMeshes[0]->mVertices, m_device.model->mMeshes[0]->mNormals, m_device.model->mMeshes[0]->mTextureCoords[0], m_device.model->mMeshes[0]->mTangents, indis);
+	glBindVertexArray(0);
+
 	glGenTextures(1, &renderedTexture);
 	glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
@@ -1259,6 +1284,29 @@ GLuint CManager::LoadShaders(const char * vertex_file_path, const char * fragmen
 		stringstream ss;
 		ss << VertexShaderStream.rdbuf();
 		VertexShaderCode = ss.str();
+		char *token = NULL;
+		char *nextToken = NULL;
+		token = strtok_s((char *)VertexShaderCode.c_str(), "¿", &nextToken);
+		//token = (char *)texName.c_str();
+		//token +=(char *) pngextencion.c_str();
+		string addDef = token + '\n';
+#ifdef VER_LIGTH
+		addDef += "\n#define DIR_LIGHT\n";
+#endif // DEBUG
+#ifdef BLINN
+		addDef += "\n#define BLINN\n";
+#endif // DEBUG
+#ifdef DIR_LIGHT
+		addDef += "\n#define DIR_LIGHT\n";
+#endif // DEBUG
+#ifdef CONE_LIGHT
+		addDef += "\n#define CONE_LIGHT\n";
+#endif // DEBUG
+#ifdef VER_LIGTH
+		addDef += "\n#define POINT_LIGHT\n";
+#endif // DEBUG
+		addDef += nextToken;
+		VertexShaderCode = addDef;
 		VertexShaderStream.close();
 	}
 	else {
@@ -1274,6 +1322,29 @@ GLuint CManager::LoadShaders(const char * vertex_file_path, const char * fragmen
 		std::stringstream sstr;
 		sstr << FragmentShaderStream.rdbuf();
 		FragmentShaderCode = sstr.str();
+		char *token = NULL;
+		char *nextToken = NULL;
+		token = strtok_s((char *)FragmentShaderCode.c_str(), "¿", &nextToken);
+		//token = (char *)texName.c_str();
+		//token +=(char *) pngextencion.c_str();
+		string addDef = token + '\n';
+#ifdef VER_LIGTH
+		addDef += "\n#define DIR_LIGHT\n";
+#endif // DEBUG
+#ifdef BLINN
+		addDef += "\n#define BLINN\n";
+#endif // DEBUG
+#ifdef DIR_LIGHT
+		addDef += "\n#define DIR_LIGHT\n";
+#endif // DEBUG
+#ifdef CONE_LIGHT
+		addDef += "\n#define CONE_LIGHT\n";
+#endif // DEBUG
+#ifdef VER_LIGTH
+		addDef += "\n#define POINT_LIGHT\n";
+#endif // DEBUG
+		addDef += nextToken;
+		FragmentShaderCode = addDef;
 		FragmentShaderStream.close();
 	}
 

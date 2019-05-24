@@ -3,6 +3,11 @@
 
 //#define DX 2
 #define OPENGL 3
+#define VER_LIGTH
+//#define BLINN
+#define DIR_LIGHT
+#define CONE_LIGHT
+#define POINT_LIGHT
 #include <vector>
 #include <string>
 #include <iostream>

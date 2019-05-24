@@ -33,7 +33,7 @@ public:
 	CLayout					m_layout;
 
 
-	//	CMesh				m_mesh;
+	CMesh				m_mesh;
 	//	CMesh				m_hand;
 	std::vector<CMesh>	m_meshes;
 	//std::vector<CMesh>	m_meshes2;
@@ -62,19 +62,24 @@ public:
 	_XMFLOAT4 color;
 
 
-	XMFLOAT4 m_lightDir = { 1,0,0,0 };
-	XMFLOAT4 SpecularColor = { 255,255,255,0 };
-	XMFLOAT4 DifuseColor = { 0,255,0,0 };
-	XMFLOAT4 SPpower = { 1,1,1,1 };
-	XMFLOAT4 ambientColor = { 255,0,0,0 };
-	XMFLOAT4 KDAS = { 1,0.001,1,1 };
+	XMFLOAT4 m_lightDir = { 0,1,0,0 };
+	XMFLOAT4 SpecularColor = { 1,1,1,1 };
+	XMFLOAT4 DifuseColor = { 0,1,0,0 };
+	XMFLOAT4 SPpower = { 10,10,10,10 };
+	XMFLOAT4 ambientColor = { 1,0,0,0 };
+	XMFLOAT4 KDASL = { 1,0.001,1,1 };
+	XMFLOAT4 LPLQ = { 4,4 * 4,0,0 };
+	XMFLOAT4 ligthPosition = { 0,0.9,-2,0 };
+	XMFLOAT4 SLCOC = XMFLOAT4{ -5,0,0,0 };
+
 #elif OPENGL
 	vec4 color = vec4(1, 1, 1, 1);
-	vec4 ligthDir = vec4(1, 0, -1, 1.2);
+	vec4 ligthDir = vec4(0, 1, 0, 0);
 	vec4 SpecularColor = { 1,1,1,1 };
 	vec4 ambientColor = { 1,0,0,0 };
-	vec4 KDASL = { 1,0.001,1,.001 };
-	vec4 ligthPosition = { 0,1,1.2,0 };
+	vec4 KDASL = { 1,0.001,1,1};
+	vec4 SLCOC = vec4{-.3,0,0,0};
+	vec4 ligthPosition = { 0,0.7,-2,0 };
 	//vec4 DifuseColor = { 20,20,20,20 };
 	vec4 DifuseColor = { 0,1,0,0 };
 	//vec4 DifuseColor = { 0,0,0,0};
@@ -155,5 +160,6 @@ public:
 	bool bFiestaMode = false;
 	float timeFiesta = 0;
 	void fiesta();
+	float time = 0;
 };
 

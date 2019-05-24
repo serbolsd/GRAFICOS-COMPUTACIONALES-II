@@ -47,7 +47,10 @@ struct CBChangesEveryFrame
 	XMFLOAT4 DifuseColor;                 // Difuse color (sRGBA)
 	XMFLOAT4 AmbientalColor;
 	XMFLOAT4 SPpower;
-	XMFLOAT4 KDAS;
+	XMFLOAT4 KDASL;
+	XMFLOAT4 LPLQ;
+	XMFLOAT4 lightPosition;
+	XMFLOAT4 SLCOC;
 };
 
 
@@ -150,24 +153,55 @@ void keyBoardKey(unsigned char key, int x, int y)
 	}
 	if (key == 'D' || key == 'd')		// Derecha
 	{
-		g_manager.m_camera[g_manager.m_cameraNum].eye += g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
-		g_manager.m_camera[g_manager.m_cameraNum].at += g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+		if (key=='d')
+		{
+			g_manager.ligthPosition.z += .1;
+		}
+		else
+		{
+			g_manager.m_camera[g_manager.m_cameraNum].eye += g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+			g_manager.m_camera[g_manager.m_cameraNum].at += g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+		}
 	}
 	if (key == 'A' || key == 'a')		// Izquierda
 	{
-		//g_manager.m_camera.eye -= g_manager.m_camera.cameraRight*g_manager.m_camera.cameraSpeed;
-		g_manager.m_camera[g_manager.m_cameraNum].eye -= g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
-		g_manager.m_camera[g_manager.m_cameraNum].at -= g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+		if (key == 'a')
+		{
+			g_manager.ligthPosition.z -= .1;
+		}
+		else
+		{
+			//g_manager.m_camera.eye -= g_manager.m_camera.cameraRight*g_manager.m_camera.cameraSpeed;
+			g_manager.m_camera[g_manager.m_cameraNum].eye -= g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+			g_manager.m_camera[g_manager.m_cameraNum].at -= g_manager.m_camera[g_manager.m_cameraNum].cameraRight*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+
+		}
 	}
 	if (key == 'W' || key == 'w')	// Zoom adelante
 	{
-		g_manager.m_camera[g_manager.m_cameraNum].eye -= (g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed);
-		g_manager.m_camera[g_manager.m_cameraNum].at -= g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+		if (key == 'w')
+		{
+			g_manager.ligthPosition.y += .1;
+		}
+		else
+		{
+			g_manager.m_camera[g_manager.m_cameraNum].eye -= (g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed);
+			g_manager.m_camera[g_manager.m_cameraNum].at -= g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+
+		}
 	}
 	if (key == 'S' || key == 's')	// Zoom atras
 	{
-		g_manager.m_camera[g_manager.m_cameraNum].eye += (g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed);
-		g_manager.m_camera[g_manager.m_cameraNum].at += g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+		if (key == 's')
+		{
+			g_manager.ligthPosition.y -= .1;
+		}
+		else
+		{
+			g_manager.m_camera[g_manager.m_cameraNum].eye += (g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed);
+			g_manager.m_camera[g_manager.m_cameraNum].at += g_manager.m_camera[g_manager.m_cameraNum].cameraFront*g_manager.m_camera[g_manager.m_cameraNum].m_speed;
+
+		}
 	}
 	if (key == 'J' || key == 'j')	// rotation mesh
 	{
@@ -222,13 +256,21 @@ void keyBoardKey(unsigned char key, int x, int y)
 
 		}
 	}
-	if (key == 'z' || key == 'Z' )
+	if (key == 'z' )
 	{
 		g_manager.changeSpecularPower(0);
 	}
-	if (key == 'X' || key == 'x')
+	if ( key == 'x')
 	{
 		g_manager.changeSpecularPower(1);
+	}
+	if (key == 'Z')
+	{
+		g_manager.SLCOC.x -= 0.1;
+	}
+	if (key == 'X')
+	{
+		g_manager.SLCOC.x += 0.1;
 	}
 	glutPostRedisplay();
 }
@@ -921,6 +963,51 @@ void renderFirtsPersonCam()
 	
 
 	g_manager.bRotationMesh = false;
+
+	//g_manager.m_mesh.escaleModel();
+
+	//g_manager.m_mesh.voidescalar();
+	MatrixID = glGetUniformLocation(g_manager.programID, "MM");
+	g_manager.m_mesh.matModel = mat4{ .5,0,0,0,
+									0,.5,0,0,
+									0,0,.5,0,
+									g_manager.ligthPosition.x,g_manager.ligthPosition.y,g_manager.ligthPosition.z,1 };
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &g_manager.m_mesh.matModel[0][0]);
+	//lBindTexture(GL_TEXTURE_2D, m_TextureArray.at(i)->m_GLHandleID);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_mesh.vertexbuffer);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	
+	
+	GLuint texID = glGetUniformLocation(g_manager.programID, "normalTexture");
+	glUniform1i(texID, g_manager.m_meshes[0].textures.normalID);
+	glActiveTexture(GL_TEXTURE0 + g_manager.m_meshes[0].textures.normalID);
+	//glBindBuffer(GL_ARRAY_BUFFER, g_manager.m_meshes[i].uvBuffer);
+	//glActiveTexture(g_manager.m_meshes[i].m_tex.m_textureID);
+	glBindTexture(GL_TEXTURE_2D, g_manager.m_meshes[0].textures.normalID);
+	//glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA, g_manager.WindowSize.m_Width, g_manager.WindowSize.m_Height);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (3 * sizeof(float)));
+	
+	glVertexAttribPointer(
+		2,                  // atributo 0. No hay razón particular para el 0, pero debe corresponder en el shader.
+		3,                  // tamaño
+		GL_FLOAT,           // tipo
+		GL_FALSE,           // normalizado?
+		sizeof(Vertex),                    // Paso
+		(unsigned char*)NULL + (5 * sizeof(float))            // desfase del buffer
+	);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (unsigned char*)NULL + (8 * sizeof(float)));
+	glDrawArrays(GL_TRIANGLES, 0, g_manager.m_mesh.numTris * 3 * 3); // Empezar desde el vértice 0S; 3 vértices en total -> 1 triángulo
+	
+	
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(0);
+
 	for (int i = 0; i < g_manager.m_meshes.size(); i++)
 	{
 		g_manager.m_meshes[i].escaleModel();
@@ -993,7 +1080,7 @@ void renderFirtsPersonCam()
 //--------------------------------------------------------------------------------------
 void Render()
 {
-	
+
 #ifdef DX
 	if (!g_manager.dvice_init)
 	{
@@ -1026,7 +1113,7 @@ void Render()
 	if (g_manager.m_cameraNum == 0)
 	{
 		//g_manager.m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &g_manager.m_renderTargetV.m_pRenderTargetView, g_manager.m_renderTargetV.m_pDepthStencilView);
-	
+
 	}
 	if (g_manager.m_cameraNum == 1)
 	{
@@ -1037,9 +1124,9 @@ void Render()
 	//
 	if (g_manager.m_cameraNum == 0)
 	{
-	//	g_manager.m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &g_manager.m_renderTargetV.m_pRenderTargetView, g_manager.m_renderTargetV.m_pDepthStencilView);
-	//	g_manager.m_deviceContext.m_pImmediateContext->ClearRenderTargetView(g_manager.m_renderTargetV.m_pRenderTargetView, ClearColor);
-	//	g_manager.m_deviceContext.m_pImmediateContext->ClearDepthStencilView(g_manager.m_renderTargetV.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+		//	g_manager.m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &g_manager.m_renderTargetV.m_pRenderTargetView, g_manager.m_renderTargetV.m_pDepthStencilView);
+		//	g_manager.m_deviceContext.m_pImmediateContext->ClearRenderTargetView(g_manager.m_renderTargetV.m_pRenderTargetView, ClearColor);
+		//	g_manager.m_deviceContext.m_pImmediateContext->ClearDepthStencilView(g_manager.m_renderTargetV.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 	if (g_manager.m_cameraNum == 1)
 	{
@@ -1107,7 +1194,7 @@ void Render()
 	//renderSegurityCam();
 
 	renderFirtsPersonCam();
-	
+
 	//drawnm_meshes();
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -1117,16 +1204,17 @@ void Render()
 
 
 
-	std::string frames = "fps: " + std::to_string(ImGui::GetIO().Framerate) + "\n" + "Num Meshse:" + std::to_string(g_manager.m_meshes.size() );
+	std::string frames = "fps: " + std::to_string(ImGui::GetIO().Framerate) + "\n" + "Num Meshse:" + std::to_string(g_manager.m_meshes.size());
 	ImGui::Text(frames.c_str());
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    g_manager.m_swapChain.m_pSwapChain->Present( 0, 0 );
+	g_manager.m_swapChain.m_pSwapChain->Present(0, 0);
 
 #elif OPENGL
-
+	g_manager.time += 0.01f;
+	g_manager.ligthDir = vec4(cos(g_manager.time),0,sin(g_manager.time),0);
 	GLuint LDID = glGetUniformLocation(g_manager.programID, "LD");
 	glUniform4fv(LDID, 1, &g_manager.ligthDir[0]);
 	GLuint VPID = glGetUniformLocation(g_manager.programID, "VP");
@@ -1145,6 +1233,8 @@ void Render()
 	glUniform4fv(ACID, 1, &g_manager.ambientColor[0]);
 	GLuint KDASID = glGetUniformLocation(g_manager.programID, "KDASL");
 	glUniform4fv(KDASID, 1, &g_manager.KDASL[0]);
+	GLuint SLCOCID = glGetUniformLocation(g_manager.programID, "SLCOC");
+	glUniform4fv(SLCOCID, 1, &g_manager.SLCOC[0]);
 
 	checkWindowSize();
 	
@@ -1161,6 +1251,10 @@ void Render()
 #ifdef DX
 void drawnm_meshes(XMMATRIX mvp)
 {
+	//g_manager.time += (float)XM_PI * 0.005f;
+	g_manager.time +=  0.005f;
+	g_manager.m_lightDir = {cos(g_manager.time),0, sin(g_manager.time),0 };
+	//g_manager.m_lightDir = {0,0,-1,0 };
 	for (int i = 0; i < g_manager.m_meshes.size(); i++)
 	{
 		static float t = 0.0f;
@@ -1182,7 +1276,7 @@ void drawnm_meshes(XMMATRIX mvp)
 			t += (float)XM_PI * 0.0005f;
 			tim = t;
 		}
-		g_manager.m_meshes[i].rotation(t);
+		//g_manager.m_meshes[i].rotation(t);
 		CBChangesEveryFrame m_meshes;
 		if (g_manager.m_buffers.m_pVertexBuffer) g_manager.m_buffers.m_pVertexBuffer->Release();
 		//if (g_manager.m_buffers.m_pIndexBuffer) g_manager.m_buffers.m_pIndexBuffer->Release();
@@ -1209,11 +1303,11 @@ void drawnm_meshes(XMMATRIX mvp)
 		g_manager.m_device.m_pd3dDevice->CreateBuffer(&g_manager.m_device.bd, &g_manager.m_device.InitData, &g_manager.m_buffers.m_pIndexBuffer);
 		// Set index buffer
 		g_manager.m_deviceContext.m_pImmediateContext->IASetIndexBuffer(g_manager.m_buffers.m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-		RESULT = g_manager.m_meshes[i].Esmatris*g_manager.m_meshes[i].matrixRotation;
+		//RESULT = g_manager.m_meshes[i].Esmatris*g_manager.m_meshes[i].matrixRotation;
 		//m_meshes.mWorld = g_manager.m_meshes[i].Esmatris;
 		//m_meshes.mWorld *= g_manager.m_meshes[i].matrixRotation;
-		g_manager.m_meshes[i].voidescalar();
-		m_meshes.mWorld = RESULT* g_manager.m_meshes[i].Escar;
+		//g_manager.m_meshes[i].voidescalar();
+		m_meshes.mWorld = XMMatrixIdentity();
 		//m_meshes.mWorld *=mvp;
 		//m_meshes.mWorld = g_manager.m_meshes[i].Esmatris*g_manager.m_meshes[i].matrixRotation;
 		//m_meshes.vMeshColor = g_vMeshColorTri;
@@ -1222,11 +1316,18 @@ void drawnm_meshes(XMMATRIX mvp)
 		m_meshes.lightDir = g_manager.m_lightDir;
 
 		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_View._41,-g_manager.m_camera[g_manager.m_cameraNum].m_View._42,g_manager.m_camera[g_manager.m_cameraNum].m_View._43,g_manager.m_camera[g_manager.m_cameraNum].m_View._44};
+		//m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_View._14,-g_manager.m_camera[g_manager.m_cameraNum].m_View._24,g_manager.m_camera[g_manager.m_cameraNum].m_View._34,g_manager.m_camera[g_manager.m_cameraNum].m_View._44};
+
 		m_meshes.DifuseColor = g_manager.DifuseColor;
 		m_meshes.SpecularColor = g_manager.SpecularColor;
 		m_meshes.SPpower = g_manager.SPpower;
 		m_meshes.AmbientalColor = g_manager.ambientColor;
-		m_meshes.KDAS = g_manager.KDAS;
+		m_meshes.KDASL = g_manager.KDASL;
+		m_meshes.lightPosition=g_manager.ligthPosition;
+		m_meshes.SLCOC=g_manager.SLCOC;
+		m_meshes.LPLQ=g_manager.LPLQ;
+
+
 
 		g_manager.m_deviceContext.m_pImmediateContext->UpdateSubresource(g_manager.m_buffers.m_pCBChangesEveryFrame, 0, NULL, &m_meshes, 0, 0);
 		g_manager.m_deviceContext.m_pImmediateContext->DrawIndexed(g_manager.m_meshes[i].m_numIndex, 0, 0);
