@@ -625,6 +625,7 @@ void CManager::DcreateDepthStencilV(HRESULT &hr)
 	ZeroMemory(&m_device.descDSV, sizeof(m_device.descDSV));
 	m_device.descDSV.Format = m_device.descDepth.Format;
 	m_device.descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	//m_device.descDSV.ViewDimension = ;
 	m_device.descDSV.Texture2D.MipSlice = 0;
 	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_renderTargetV.m_pDepthStencilView);
 	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_lightPass.m_pDepthStencilView);
@@ -948,6 +949,8 @@ void CManager::chargeVertexShadervVertexBLINNPHONG(const char * file_path, ID3D1
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (FAILED(hr))
 	{
@@ -1024,6 +1027,8 @@ void CManager::chargePixelShadervVertexBLINNPHONG(const char * file_path, ID3D11
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (!hr)
 	{
@@ -1104,6 +1109,8 @@ void CManager::chargeVertexShadervVertexBLINN(const char * file_path, ID3D11Vert
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (FAILED(hr))
 	{
@@ -1178,6 +1185,8 @@ void CManager::chargePixelShadervVertexBLINN(const char * file_path, ID3D11Pixel
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (!hr)
 	{
@@ -1259,6 +1268,8 @@ void CManager::chargeVertexShadervPixelBLINNPHONG(const char * file_path, ID3D11
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (FAILED(hr))
 	{
@@ -1334,11 +1345,11 @@ void CManager::chargePixelShadervPixelBLINNPHONG(const char * file_path, ID3D11P
 		msg.resize(msgSize);
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
+
+		OutputDebugStringA(msg.c_str());
 		pErroMsg->Release();
-	}
-	if (!hr)
-	{
-		cout << "can't compile pixel shader\n";
+
+		
 	}
 	m_device.m_pd3dDevice->CreatePixelShader(m_device.pVSBlob->GetBufferPointer(), m_device.pVSBlob->GetBufferSize(), NULL, &pPS);
 	return;
@@ -1416,6 +1427,8 @@ void CManager::chargeVertexShadervPixelBLINN(const char * file_path, ID3D11Verte
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (FAILED(hr))
 	{
@@ -1491,6 +1504,8 @@ void CManager::chargePixelShadervPixelBLINN(const char * file_path, ID3D11PixelS
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (!hr)
 	{
@@ -1544,6 +1559,8 @@ void CManager::chargeVertexShader(const char * file_path, ID3D11VertexShader * &
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 
 	//compilefrom
@@ -1600,6 +1617,8 @@ void CManager::chargePixelShader(const char * file_path, ID3D11PixelShader * &pP
 		memcpy(&msg[0], pErroMsg->GetBufferPointer(), msgSize);
 
 		pErroMsg->Release();
+
+		OutputDebugStringA(msg.c_str());
 	}
 	if (!hr)
 	{

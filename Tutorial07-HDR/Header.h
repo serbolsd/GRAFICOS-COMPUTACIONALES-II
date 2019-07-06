@@ -1,7 +1,7 @@
 #pragma once
 
-#define DX 2
-//#define OPENGL 3
+//#define DX 2
+#define OPENGL 3
 //#define VER_LIGTH
 //#define BLINN
 #define DIR_LIGHT

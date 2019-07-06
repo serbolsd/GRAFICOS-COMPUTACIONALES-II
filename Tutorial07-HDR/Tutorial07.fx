@@ -81,11 +81,7 @@ float4 calculateDirectionalLight(float4 posWS, float4 normalWS, float3 difuu)
 
 	float3 lightDirWS = -normalize(lightDir.xyz);
 	float wsNdl = max(0.0f, dot(lightDirWS.xyz, normalWS.xyz));
-	//float3 wsViewDir = normalize(vViewPosition.xyz);// Direction from at to camera position
-
-	float3 wsViewDir = normalize((posWS.xyz - vViewPosition.xyz));
-	//float4 lightDirWS = -normalize(lightDir.xyzw);
-	//float wsNdl = max(0.0f, dot(lightDirWS, normalWS));
+	float3 wsViewDir = -normalize(posWS.xyz - vViewPosition.xyz);
 
 #ifdef BLINN // Blinn specular
 	float3 wsReflect = normalize(reflect(-lightDirWS.xyz, normalWS.xyz));
@@ -97,14 +93,9 @@ float4 calculateDirectionalLight(float4 posWS, float4 normalWS, float3 difuu)
 	float SpecularFactor = pow(wsNdH, SPpower.x) * wsNdl;
 #endif
 
-//	float4 colorDifuse = txDiffuse.Sample(samLinear, input.Tex);
-	//float attenuation = (1.0 / (lin + quad));
-	//float3 dif = txDiffuse.Sample(samLinear, texcord).xyz;
-	//float3 difuse = difuu*KDASL.x* DifuseColor.xyz*wsNdl;
-	float3 difuse = KDASL.x* difuu.xyz*wsNdl;
-	//float3 difuse = KDASL.x*float3(txDiffuse.Sample(samLinear, texcord).xyz)*wsNdl;
-	float3 ambient = KDASL.y*(1.0 - wsNdl)*AmbientalColor.xyz;
-	float3 specular = KDASL.z*SpecularColorDir.xyz* SpecularFactor;
+	float3 difuse = DifuseColor.xyz * difuu.xyz * KDASL.x * wsNdl;
+	float3 ambient = KDASL.y* (1.0 - wsNdl) * AmbientalColor.xyz;
+	float3 specular = KDASL.z * SpecularColorDir.xyz * SpecularFactor;
 
 	float4 color = float4((difuse.xyz + specular.xyz + ambient.xyz), 1.0f);
 	return color / ADPS.x;
@@ -118,10 +109,6 @@ float4 calculatePointLight(float4 posWS, float4 normalWS, float3 difuu)
 	//lightDirWS = -normalize(lightDirWS);
 	float wsNdl = max(0.0f, dot(lightDirWS.xyz, normalWS.xyz));
 	wsNdl = wsNdl * (LPLQLD.z / length(dist));
-	//float3 wsLightDir = -normalize(wsPos.xyz - vViewPosition.xyz);
-	//float wsNdL = max(0.0f, dot(wsLightDir.xyz, wsNormal.xyz));
-	//float3 Dist = wsPos.xyz - vViewPosition.xyz;
-	//wsNdL = wsNdL * (PointMaxDistance / length(Dist));
 #ifdef BLINN
 	float3 wsReflect = normalize(reflect(-lightDirWS.xyz, normalWS.xyz)); //calculo la direccion del reflej
 	float wsVdR = max(0.0f, dot(wsViewDir.xyz, wsReflect.xyz)); //me aseguro de optener la intencidad con la que se ve el reflejo
@@ -131,12 +118,6 @@ float4 calculatePointLight(float4 posWS, float4 normalWS, float3 difuu)
 	float wsNdH = max(0.0f, dot(normalWS.xyz, wsHalf.xyz));
 	float SpecularFactor = pow(wsNdH, SPpower.x) * wsNdl;
 #endif
-	//float lin = KDASL.w + (LPLQLD.x * dist);
-	//float quad = (LPLQLD.y * (dist* dist));
-	//float attenuation = (1.0 / (lin + quad));
-	//float4 dif = float3(txDiffuse.Sample(samLinear, texcord.xy).xyz);
-	//float4 dif = texture2D(txDiffuse, texcord.xy)
-	//float3 difuse = difuu*KDASL.x* DifuseColor.xyz*wsNdl;
 	float3 difuse = KDASL.x* difuu.xyz*wsNdl;
 	//float3 difuse = KDASL.x* txDiffuse.Sample(samLinear, input.Tex).xyz*wsNdl;
 	//float3 difuse = dif.xyz;
@@ -227,22 +208,15 @@ float4 calculateSpotLight(float4 posWS, float4 normalWS, float3 difuu)
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output = (PS_INPUT)0;
-	//output.Pos = mul(input.Pos, World);
-	//output.Pos = mul(output.Pos, View);
-	//output.Pos = mul(output.Pos, Projection);
-	output.Tex.x = input.Tex.x;
-	output.Tex.y = input.Tex.y;
-	matrix matViewProjection = View * Projection;
-	
+
+	output.Tex = input.Tex;
+
 	float4 wsPos = mul(float4(input.Pos.xyz, 1.0), World);
 	output.Pos = mul(wsPos, View);
 	output.Pos = mul(output.Pos, Projection);
-	
-	//float4 wsPos= mul(input.Pos, World);
-	float4 normalWS = mul(input.Nor, World);
 
-	float4 Nws = float4(normalWS.xyz, 1);
-	float4 Tangentws = normalize(mul(input.tan, World));
+	float3 normalWS = normalize(mul(float4(input.Nor.xyz, 0.0), World).xyz);
+	float3 Tangentws = normalize(mul(float4(input.tan.xyz, 0.0), World).xyz);
 #ifdef VER_LIGTH
 	//float4 dif =txDiffuse.Sample(samLinear, input.Tex);
 	float4 dif = float4(1, 1, 1, 1);
@@ -257,26 +231,26 @@ PS_INPUT VS(VS_INPUT input)
 #ifdef DIR_LIGHT
 	if (SLDPS.x)
 	{
-		output.Color += calculateDirectionalLight(wsPos, normalWS, dif.xyz);
+		output.Color += calculateDirectionalLight(wsPos, float4(normalWS, 0.0), dif.xyz);
 	}
 #endif
 #ifdef POINT_LIGHT
 	if (SLDPS.y) 
 	{
-		output.Color += calculatePointLight(wsPos, normalWS, dif.xyz);
+		output.Color += calculatePointLight(wsPos, float4(normalWS, 0.0), dif.xyz);
 	}
 #endif
 #ifdef CONE_LIGHT
 	if(SLDPS.z)
 	{
 		//output.Color += calculateSpotLight(wsPos, normalWS, dif.xyz);
-		output.Color += calculateSpotLight2(wsPos, normalWS, dif.xyz);
+		output.Color += calculateSpotLight2(wsPos, float4(normalWS, 0.0), dif.xyz);
 	}
 #endif
 #else
-	output.wsNormal = normalWS.xyz;
+	output.wsNormal = normalWS;
 	output.wsPos = wsPos.xyz;
-	output.wsTan = Tangentws.xyz;
+	output.wsTan = Tangentws;
 #endif
 
 	return output;
@@ -299,34 +273,34 @@ float4 PS(PS_INPUT input) : SV_Target
 	return txDiffuse.Sample(samLinear, input.Tex)* input.Color;
 	//return input.Color;
 #else
-	//float3 wsLightDir = -normalize(lightDir.xyz);
-	//float wsNdL = max(0.0f, dot(wsLightDir.xyz, input.wsNormal.xyz));
-	//float3 wsViewDir = -normalize(input.wsPos.xyz - vViewPosition.xyz);
-	float4 dif=txDiffuse.Sample(samLinear, input.Tex);
-	float3 wsBinormal = cross(input.wsNormal.xyz, input.wsTan.xyz);
-	float4 TexNormal = txNormal.Sample(samLinear, input.Tex);;
+	float4 albedo = txDiffuse.Sample(samLinear, input.Tex);
+	float3 wsBinormal = normalize(cross(input.wsNormal.xyz, input.wsTan.xyz));
+
+	float4 TexNormal = txNormal.Sample(samLinear, input.Tex);
 	TexNormal = normalize(TexNormal*2.0f - 1.0f);
+
 	float3x3 TBN = float3x3(input.wsTan.xyz, wsBinormal.xyz, input.wsNormal.xyz);
-	float3 wssNormal = normalize(mul(TexNormal.xyz,TBN));
+	float3 wssNormal = normalize(mul(TexNormal.xyz, TBN));
+
 	float4 norms = float4(wssNormal.xyz, 0);
-	float4 color=float4(0,0,0,0);
+	float4 color = float4(0, 0, 0, 0);
 #ifdef DIR_LIGHT
 	if (SLDPS.x)
 	{
-		color += calculateDirectionalLight(float4(input.wsPos.xyz, 1), norms, dif.xyz);
+		color += calculateDirectionalLight(float4(input.wsPos.xyz, 1), norms, albedo.xyz);
 	}
 #endif
 #ifdef POINT_LIGHT
 	if(SLDPS.y)
 	{
-		color += calculatePointLight(float4(input.wsPos.xyz, 1), norms, dif.xyz);
+		color += calculatePointLight(float4(input.wsPos.xyz, 1), norms, albedo.xyz);
 	}
 #endif
 #ifdef CONE_LIGHT
 	if(SLDPS.z)
 	{
 		//color += calculateSpotLight(float4(input.wsPos.xyz,1), norms, dif.xyz);
-		color += calculateSpotLight2(float4(input.wsPos.xyz,1), norms, dif.xyz);
+		color += calculateSpotLight2(float4(input.wsPos.xyz,1), norms, albedo.xyz);
 	}
 #endif
 
