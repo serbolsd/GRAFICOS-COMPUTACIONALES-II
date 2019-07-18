@@ -625,16 +625,17 @@ void CManager::DcreateDepthStencilV(HRESULT &hr)
 	ZeroMemory(&m_device.descDSV, sizeof(m_device.descDSV));
 	m_device.descDSV.Format = m_device.descDepth.Format;
 	m_device.descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	//m_device.descDSV.ViewDimension =D3D11_DSV_DIMENSION_TEXTURE2D;
 	//m_device.descDSV.ViewDimension = ;
 	m_device.descDSV.Texture2D.MipSlice = 0;
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_renderTargetV.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_renderTargetV.m_pDepthStencilView);
 	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_lightPass.m_pDepthStencilView);
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_LuminancePass.m_pDepthStencilView);
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BrightPass.m_pDepthStencilView);
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurHPass.m_pDepthStencilView);
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurVPass.m_pDepthStencilView);
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_AddBrightPass.m_pDepthStencilView);
-	hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_ToneMapPass.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_LuminancePass.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BrightPass.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurHPass.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurVPass.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_AddBrightPass.m_pDepthStencilView);
+	//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_ToneMapPass.m_pDepthStencilView);
 #else
 #endif // !DX
 
@@ -824,14 +825,14 @@ void CManager::DResize(float width, float height)
 		m_device.descDSV.Format = m_device.descDepth.Format;
 		m_device.descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		m_device.descDSV.Texture2D.MipSlice = 0;
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_renderTargetV.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_renderTargetV.m_pDepthStencilView);
 		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_lightPass.m_pDepthStencilView);
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_LuminancePass.m_pDepthStencilView);
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BrightPass.m_pDepthStencilView);
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurHPass.m_pDepthStencilView);
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurVPass.m_pDepthStencilView);
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_AddBrightPass.m_pDepthStencilView);
-		hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_ToneMapPass.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_LuminancePass.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BrightPass.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurHPass.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_BlurVPass.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_AddBrightPass.m_pDepthStencilView);
+		//hr = m_device.m_pd3dDevice->CreateDepthStencilView(m_texture.m_pDepthStencil, &m_device.descDSV, &m_ToneMapPass.m_pDepthStencilView);
 
 
 		
@@ -1672,7 +1673,7 @@ void CManager::generateRenderTexture()
 	textureDesc.Height = m_Height;
 	textureDesc.MipLevels = 10;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -2969,7 +2970,7 @@ void CManager::LightPass()
 
 	m_camera[m_cameraNum].setTransform();
 
-	float ClearColor[4] = { 0.50f, 0.0f, 0.60f, 1.0f }; // red, green, blue, alpha
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
 	//m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_renderTargetV.m_pRenderTargetView, m_renderTargetV.m_pDepthStencilView);
 	//m_deviceContext.m_pImmediateContext->UpdateSubresource(m_buffers.m_pCBChangeOnResize, 0, NULL, &m_camera[m_cameraNum].m_cbChangesOnResize, 0, 0);
 	m_deviceContext.m_pImmediateContext->UpdateSubresource(m_buffers.m_pCBNeverChanges, 0, NULL, &m_camera[m_cameraNum].m_cbNeverChanges, 0, 0);
@@ -3030,7 +3031,9 @@ void CManager::LightPass()
 
 		m_meshe.vViewPosition = { m_camera[m_cameraNum].m_View._41,-m_camera[m_cameraNum].m_View._42,m_camera[m_cameraNum].m_View._43,m_camera[m_cameraNum].m_View._44 };
 
-		m_meshe.DifuseColor = DifuseColor;
+		m_meshe.DifuseColorDir = DifuseColorDir;
+		m_meshe.DifuseColorPoint = DifuseColorPoint;
+		m_meshe.DifuseColorSpot = DifuseColorSpot;
 		m_meshe.SpecularColorDir = SpecularColorDir;
 		m_meshe.SpecularColorPoint = SpecularColorPoint;
 		m_meshe.SpecularColorSpot = SpecularColorSpot;
@@ -3105,7 +3108,7 @@ void CManager::LightPass()
 		rotateCamera();
 	}
 
-	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	////glLoadIdentity();
 	//
@@ -3172,10 +3175,10 @@ void CManager::LuminancePass()
 {
 #ifdef DX
 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_LuminancePass.m_pRenderTargetView, m_LuminancePass.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_LuminancePass.m_pRenderTargetView,NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_LuminancePass.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_LuminancePass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(NULL, NULL, 0, 0);
 	
 	//m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_renderTargetV.m_pRenderTargetView, m_renderTargetV.m_pDepthStencilView);
 	//m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_renderTargetV.m_pRenderTargetView, ClearColor);
@@ -3221,12 +3224,9 @@ void CManager::LuminancePass()
 	glBindFramebuffer(GL_FRAMEBUFFER, m_LuminancePass.m_RendeTargetID);
 	//glBindFramebuffer(GL_FRAMEBUFFER,0);
 
-	glClearColor(1.0f, 1.0f, 0.4f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	////glLoadIdentity();
-	//
-	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	bRotationMesh = false;
 	glEnableVertexAttribArray(0);
@@ -3254,10 +3254,10 @@ void CManager::LuminancePass()
 void CManager::BrightPass()
 {
 #ifdef DX 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_BrightPass.m_pRenderTargetView, m_BrightPass.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_BrightPass.m_pRenderTargetView, NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_BrightPass.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_BrightPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_BrightPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_deviceContext.m_pImmediateContext->VSSetShader(m_programSBright.m_VertexS.m_pVertexShader, NULL, 0);
 	m_deviceContext.m_pImmediateContext->PSSetShader(m_programSBright.m_PixelS.m_pPixelShader, NULL, 0);
@@ -3307,9 +3307,9 @@ void CManager::BrightPass()
 	GLint BloomThresholdID = glGetUniformLocation(m_programSBright.ID, "BloomThreshold");
 	glUniform1f(BloomThresholdID, BloomThreshold);
 
-	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
-	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -3342,10 +3342,10 @@ void CManager::BrightPass()
 void CManager::Blur_HPass()
 {
 #ifdef DX 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_BlurHPass.m_pRenderTargetView, m_BlurHPass.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_BlurHPass.m_pRenderTargetView, NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_BlurHPass.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_BlurHPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_BlurHPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_deviceContext.m_pImmediateContext->VSSetShader(m_programSBlur_H.m_VertexS.m_pVertexShader, NULL, 0);
 	m_deviceContext.m_pImmediateContext->PSSetShader(m_programSBlur_H.m_PixelS.m_pPixelShader, NULL, 0);
@@ -3393,9 +3393,9 @@ void CManager::Blur_HPass()
 	GLint fViewportDimensionsID = glGetUniformLocation(m_programSBlur_H.ID, "fViewportDimensions");
 	glUniform2f(fViewportDimensionsID, 1, fViewportDimensions[0]);
 
-	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
-	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -3424,10 +3424,10 @@ void CManager::Blur_HPass()
 void CManager::Blur_VPass()
 {
 #ifdef DX 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_BlurVPass.m_pRenderTargetView, m_BlurVPass.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_BlurVPass.m_pRenderTargetView, NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_BlurVPass.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_BlurVPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_BlurVPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_deviceContext.m_pImmediateContext->VSSetShader(m_programSBlur_V.m_VertexS.m_pVertexShader, NULL, 0);
 	m_deviceContext.m_pImmediateContext->PSSetShader(m_programSBlur_V.m_PixelS.m_pPixelShader, NULL, 0);
@@ -3476,9 +3476,9 @@ void CManager::Blur_VPass()
 	GLint fViewportDimensionsID = glGetUniformLocation(m_programSBlur_V.ID, "fViewportDimensions");
 	glUniform1f(fViewportDimensionsID, fViewportDimensions[0]);
 
-	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
-	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -3507,10 +3507,10 @@ void CManager::Blur_VPass()
 void CManager::AddBrightPass()
 {
 #ifdef DX 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_AddBrightPass.m_pRenderTargetView, m_AddBrightPass.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_AddBrightPass.m_pRenderTargetView, NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_AddBrightPass.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_AddBrightPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_AddBrightPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_deviceContext.m_pImmediateContext->VSSetShader(m_programSAddBirght.m_VertexS.m_pVertexShader, NULL, 0);
 	m_deviceContext.m_pImmediateContext->PSSetShader(m_programSAddBirght.m_PixelS.m_pPixelShader, NULL, 0);
@@ -3556,9 +3556,9 @@ void CManager::AddBrightPass()
 	GLint blurMipID = glGetUniformLocation(m_programSAddBirght.ID, "blurMip");
 	glUniform1i(blurMipID, AddBmip);
 
-	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
-	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -3595,10 +3595,10 @@ void CManager::AddBrightPass()
 void CManager::tonePass()
 {
 #ifdef DX 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_ToneMapPass.m_pRenderTargetView, m_ToneMapPass.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_ToneMapPass.m_pRenderTargetView, NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_ToneMapPass.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_ToneMapPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_ToneMapPass.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_deviceContext.m_pImmediateContext->VSSetShader(m_programSToneMap.m_VertexS.m_pVertexShader, NULL, 0);
 	m_deviceContext.m_pImmediateContext->PSSetShader(m_programSToneMap.m_PixelS.m_pPixelShader, NULL, 0);
@@ -3647,7 +3647,7 @@ void CManager::tonePass()
 	glUniform1f(BloomMuiltiplierID, BloomMuiltiplier);
 
 
-	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -3679,10 +3679,10 @@ void CManager::tonePass()
 void CManager::RenderToscreenPass()
 {
 #ifdef DX 
-	float ClearColor[4] = { 0.0f, 1.0f, 0.60f, 1.0f }; // red, green, blue, alpha
-	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_renderTargetV.m_pRenderTargetView, m_renderTargetV.m_pDepthStencilView);
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // red, green, blue, alpha
+	m_deviceContext.m_pImmediateContext->OMSetRenderTargets(1, &m_renderTargetV.m_pRenderTargetView, NULL);
 	m_deviceContext.m_pImmediateContext->ClearRenderTargetView(m_renderTargetV.m_pRenderTargetView, ClearColor);
-	m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_renderTargetV.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//m_deviceContext.m_pImmediateContext->ClearDepthStencilView(m_renderTargetV.m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	m_deviceContext.m_pImmediateContext->VSSetShader(m_programSRenderScreen.m_VertexS.m_pVertexShader, NULL, 0);
 	m_deviceContext.m_pImmediateContext->PSSetShader(m_programSRenderScreen.m_PixelS.m_pPixelShader, NULL, 0);
@@ -3720,7 +3720,6 @@ void CManager::RenderToscreenPass()
 	glViewport(0, 0, WindowSize.m_Width, WindowSize.m_Height);
 	glUseProgram(m_programSRenderScreen.ID);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	glClearColor(0.0f, 1.0f, 0.4f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -3756,14 +3755,13 @@ void CManager::createRenderTaregetLightPass()
 	glGenTextures(1, &renderedTextureLight);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureLight);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 	glGenerateMipmap(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, glbit, GL_REPEAT);
 
 	//gen a frame buffer for de texture
@@ -3775,7 +3773,7 @@ void CManager::createRenderTaregetLightPass()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_lightPass.m_RendeTargetID);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer2);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureLight, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureLight,0);
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers2);
 
@@ -3796,14 +3794,14 @@ void CManager::createRenderTaregetLuminancePass()
 	glGenTextures(1, &renderedTextureLuminance);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureLuminance);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	glSamplerParameterf(renderedTextureLuminance, GL_TEXTURE_MIN_LOD, 0);
 	glSamplerParameterf(renderedTextureLuminance, GL_TEXTURE_MAX_LOD,10);
 	glSamplerParameterf(renderedTextureLuminance, GL_TEXTURE_LOD_BIAS, 0.0);
@@ -3815,10 +3813,10 @@ void CManager::createRenderTaregetLuminancePass()
 	//bind the frame buffer
 	glGenRenderbuffers(1, &depthrenderbufferLuminance);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbufferLuminance);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WindowSize.m_Width, WindowSize.m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, NULL, WindowSize.m_Width, WindowSize.m_Height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_LuminancePass.m_RendeTargetID);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbufferLuminance);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, NULL, GL_RENDERBUFFER, depthrenderbufferLuminance);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureLuminance, 0);
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers2);
@@ -3840,14 +3838,14 @@ void CManager::createRenderTaregetBrightPass()
 	glGenTextures(1, &renderedTextureBright);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureBright);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR_MIPMAP_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, glbit, GL_REPEAT);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	//gen a frame buffer for de texture
@@ -3855,10 +3853,10 @@ void CManager::createRenderTaregetBrightPass()
 	//bind the frame buffer
 	glGenRenderbuffers(1, &depthrenderbufferBright);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbufferBright);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WindowSize.m_Width, WindowSize.m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, NULL, WindowSize.m_Width, WindowSize.m_Height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_BrightPass.m_RendeTargetID);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbufferBright);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, NULL, GL_RENDERBUFFER, depthrenderbufferBright);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureBright, 0);
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers2);
@@ -3880,14 +3878,14 @@ void CManager::createRenderTaregetBlur_HPass()
 	glGenTextures(1, &renderedTextureBlur_H);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureBlur_H);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, glbit, GL_REPEAT);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	//gen a frame buffer for de texture
@@ -3895,10 +3893,10 @@ void CManager::createRenderTaregetBlur_HPass()
 	//bind the frame buffer
 	glGenRenderbuffers(1, &depthrenderbufferBlur_H);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbufferBlur_H);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WindowSize.m_Width, WindowSize.m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, NULL, WindowSize.m_Width, WindowSize.m_Height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_BlurHPass.m_RendeTargetID);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbufferBlur_H);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, NULL, GL_RENDERBUFFER, depthrenderbufferBlur_H);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureBlur_H, 0);
 
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
@@ -3921,14 +3919,14 @@ void CManager::createRenderTaregetBlur_VPass()
 	glGenTextures(1, &renderedTextureBlur_V);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureBlur_V);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, glbit, GL_REPEAT);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	//gen a frame buffer for de texture
@@ -3936,10 +3934,10 @@ void CManager::createRenderTaregetBlur_VPass()
 	//bind the frame buffer
 	glGenRenderbuffers(1, &depthrenderbufferBlur_V);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbufferBlur_V);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WindowSize.m_Width, WindowSize.m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, NULL, WindowSize.m_Width, WindowSize.m_Height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_BlurVPass.m_RendeTargetID);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbufferBlur_V);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, NULL, GL_RENDERBUFFER, depthrenderbufferBlur_V);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureBlur_V, 0);
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers2);
@@ -3961,14 +3959,14 @@ void CManager::createRenderTaregetAddBrightPass()
 	glGenTextures(1, &renderedTextureAddBright);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureAddBright);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, glbit, GL_REPEAT);
 
 	//gen a frame buffer for de texture
@@ -3976,10 +3974,10 @@ void CManager::createRenderTaregetAddBrightPass()
 	//bind the frame buffer
 	glGenRenderbuffers(1, &depthrenderbufferAddBright);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbufferAddBright);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WindowSize.m_Width, WindowSize.m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, NULL, WindowSize.m_Width, WindowSize.m_Height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_AddBrightPass.m_RendeTargetID);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbufferAddBright);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, NULL, GL_RENDERBUFFER, depthrenderbufferAddBright);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureAddBright, 0);
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers2);
@@ -4001,14 +3999,14 @@ void CManager::createRenderTaregetTonePass()
 	glGenTextures(1, &renderedTextureToneMap);
 	glBindTexture(GL_TEXTURE_2D, renderedTextureToneMap);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WindowSize.m_Width, WindowSize.m_Height, 0, GL_RGBA, GL_FLOAT, NULL);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, glbit, GL_REPEAT);
 
 	//gen a frame buffer for de texture
@@ -4016,10 +4014,10 @@ void CManager::createRenderTaregetTonePass()
 	//bind the frame buffer
 	glGenRenderbuffers(1, &depthrenderbufferToneMap);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbufferToneMap);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WindowSize.m_Width, WindowSize.m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, NULL, WindowSize.m_Width, WindowSize.m_Height);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_ToneMapPass.m_RendeTargetID);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbufferToneMap);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, NULL, GL_RENDERBUFFER, depthrenderbufferToneMap);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureToneMap, 0);
 	GLenum DrawBuffers2[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, DrawBuffers2);

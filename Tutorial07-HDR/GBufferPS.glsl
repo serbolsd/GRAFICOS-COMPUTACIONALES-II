@@ -25,7 +25,9 @@ uniform vec4 VP;//View Position
 uniform vec4 SCD;//Specular Color DIRECTION
 uniform vec4 SCP;//Specular Color POINT 
 uniform vec4 SCS;//Specular Color SPOT
-uniform vec4 DC;//Difuse Color
+uniform vec4 DCD;//Difuse Color Directional light
+uniform vec4 DCP;//Difuse Color Point Light
+uniform vec4 DCS;//Difuse Color Spot Light
 uniform vec4 AC;//Ambiental Color
 uniform vec4 SP;//speular Power 
 uniform vec4 KDASL;//const of difuse, ambiental and specular 
@@ -54,7 +56,7 @@ vec4 calculateDirectionalLight(vec4 posWS, vec4 normalWS)
 #endif
 	//float attenuation = (1.0 / (lin + quad));
 	//vec3 difuse = KDASL.x* DC.xyz*wsNdl*texture(renderedTexture, TexCoord).rgb;
-	vec3 difuse = KDASL.x*texture(renderedTexture, TexCoord).rgb*wsNdl;
+	vec3 difuse = texture(renderedTexture, TexCoord).rgb*DCD.xyz*KDASL.x*wsNdl;
 //	vec3 difuse = KDASL.x* DC.xyz*wsNdl;
 	vec3 specular = KDASL.z*SCD.xyz* SpecularFactor;
 	vec3 ambient = KDASL.y*(1.0 - wsNdl)*AC.xyz;
@@ -86,7 +88,7 @@ vec4 calculatePointLight(vec4 posWS, vec4 normalWS)
 	//float attenuation = (1.0 / (lin + quad));
 
 	//vec3 difuse = KDASL.x* DC.xyz*wsNdl*texture(renderedTexture, TexCoord).rgb;
-	vec3 difuse = KDASL.x*texture(renderedTexture, TexCoord).rgb*wsNdl;
+	vec3 difuse = texture(renderedTexture, TexCoord).rgb*DCP.xyz*KDASL.x*wsNdl;
 //	vec3 difuse = KDASL.x* DC.xyz*wsNdl;
 	vec3 specular = KDASL.z*SCP.xyz* SpecularFactor;
 	vec3 ambient = KDASL.y*(1.0 - wsNdl)*AC.xyz;
@@ -125,7 +127,7 @@ vec4 calculateSpotLight(vec4 posWS, vec4 normalWS)
 
 
 //		vec3 difuse = KDASL.x* DC.xyz*wsNdl*texture(renderedTexture, TexCoord).rgb;
-		vec3 difuse = KDASL.x*texture(renderedTexture, TexCoord).rgb*wsNdl;
+		vec3 difuse = texture(renderedTexture, TexCoord).rgb*DCS.xyz*KDASL.x*wsNdl;
 //		vec3 difuse = KDASL.x* DC.xyz*wsNdl;
 		vec3 ambient = KDASL.y*(1.0 - wsNdl)*AC.xyz;
 		vec3 specular = KDASL.z*SCS.xyz* SpecularFactor;
@@ -161,7 +163,7 @@ vec4 calculateSpotLight2(vec4 posWS, vec4 normalWS)
 	float wsNdH = max(0.0f, dot(normalWS.xyz, wsHalf.xyz));
 	float SpecularFactor = pow(wsNdH, SP.x) * wsNdl;
 #endif
-	vec3 difuse = KDASL.x*texture(renderedTexture, TexCoord).rgb*wsNdl;
+	vec3 difuse = texture(renderedTexture, TexCoord).rgb*DCS.xyz*KDASL.x*wsNdl;
 	//		vec3 difuse = KDASL.x* DC.xyz*wsNdl;
 	vec3 ambient = KDASL.y*(1.0 - wsNdl)*AC.xyz;
 	vec3 specular = KDASL.z*SCS.xyz* SpecularFactor;
@@ -183,11 +185,11 @@ void main()
 	//color = vec3( 1.0,0.5,0.3 );
 #else
 
-	vec3 wsBinormal = cross(wsNormal.xyz, wsTangent.xyz);
-	//vec3 wsBinormal = normalize(cross(wsTangent.xyz, wsNormal.xyz));
+	//vec3 wsBinormal = normalize(cross(wsNormal.xyz, wsTangent.xyz));
+	vec3 wsBinormal = normalize(cross(wsTangent.xyz, wsNormal.xyz));
 	vec4 TexNormal = texture(normalTexture, TexCoord.xy).rgba;
 	//TexNormal *= wsNormal;
-	TexNormal = normalize( TexNormal*2.0f -1.0f);
+	TexNormal = normalize( (TexNormal*2.0f) -1.0f);
 	mat3 TBN = mat3(wsTangent.xyz, wsBinormal.xyz, wsNormal.xyz);
 
 	vec3 wssNormal = normalize((TBN*TexNormal.xyz));
@@ -210,6 +212,12 @@ void main()
 		color += calculateSpotLight2(wsPos, norms)/ ADPS.z;
 	}
 #endif
+	color.x = pow(color.x, 2.2f);
+	color.y = pow(color.y, 2.2f);
+	color.z = pow(color.z, 2.2f);
+	color.w = 1.0f;
+	//color = norms;
+	//color = vec4(TexNormal.xyz,1.0f);
 	//color = texture(normalTexture, TexCoord.xy).rgba;
 	//color = texture(renderedTexture, TexCoord.xy).rgba;
 //	color=vec4(texture(renderedTexture, TexCoord).rgb,1);

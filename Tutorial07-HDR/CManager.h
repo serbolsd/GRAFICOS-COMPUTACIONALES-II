@@ -101,7 +101,9 @@ public:
 	XMFLOAT4 SpecularColorDir = { 1,1,1,1 };  	//specular color for the light direction
 	XMFLOAT4 SpecularColorPoint = { 1,1,1,1 };	//specular color for the point light
 	XMFLOAT4 SpecularColorSpot = { 1,1,1,1 };	//specular color for the spotlight
-	XMFLOAT4 DifuseColor = { 0,1,0,0 };			// color of the difuse
+	XMFLOAT4 DifuseColorDir = { 0,1,0,0 };			// color of the difuse
+	XMFLOAT4 DifuseColorPoint = { 0,1,0,0 };			// color of the difuse
+	XMFLOAT4 DifuseColorSpot = { 0,1,0,0 };			// color of the difuse
 	XMFLOAT4 SPpower = { 10,10,10,10 };			// Specular power
 	XMFLOAT4 ambientColor = { 1,0,0,0 };		// ambiental color
 	XMFLOAT4 KDASL = { 1,0.001,1,1 };			// constant of diufse, Ambiental, specular and point light
@@ -134,13 +136,15 @@ public:
 	vec4 ligthPosition = { 0,0.7,-2,0 };
 	//bool rotateDirLight = true;
 	//vec4 DifuseColor = { 20,20,20,20 };
-	vec4 DifuseColor = { 0,1,0,0 };
+	vec4 DifuseColorDir = { 0,1,0,0 };
+	vec4 DifuseColorPoint = { 0,1,0,0 };
+	vec4 DifuseColorSpot = { 0,1,0,0 };
 	//vec4 DifuseColor = { 0,0,0,0};
 	//vec4 SpecularColor = { .4,.4,.4,.4 };
 	vec4 SPpower = vec4(10);
 	vec4 LPLQLD = { 4,4 * 4,10,0 };//LIGHT POINT CONST LINEAR QUADRATIC
 
-	vec4 SLDPS = { 1, 1, 1, 1 };// SWITCH LIGHT DIRECTION, POINT, SPOT
+	vec4 SLDPS = { 1, 0, 0, 0 };// SWITCH LIGHT DIRECTION, POINT, SPOT
 	vec4 ADPS = { 1, 1, 1, 1 };// ATTENUATION LIGHT DIRECTION, POINT, SPOT
 	vec2 fViewportDimensions;
 	bool bRotationMesh = true;

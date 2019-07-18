@@ -61,9 +61,6 @@ float4 PS(PS_INPUT Input) : SV_Target
 	//combination
   //float4 color= float4(1,1,0,1);
   //return color;
-	float4 output = (0.5f*(texBlurH + texBlurV)*texBright);
+	float4 output = (texBlurH + texBlurV)+texBright;
 	return output;
-	//return texBright;
-	//return texBlurH;
-	//return texBlurV;
 }

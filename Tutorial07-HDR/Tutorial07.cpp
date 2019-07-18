@@ -948,8 +948,11 @@ void Render()
 	}
 
 	float color[4] = { g_manager.SpecularColorDir.x, g_manager.SpecularColorDir.y, g_manager.SpecularColorDir.z, g_manager.SpecularColorDir.w };
-	ImGui::ColorEdit4("SC Direction", color);
+	ImGui::ColorEdit4("Specular Color D", color);
 	g_manager.SpecularColorDir = { color[0],color[1],color[2],color[3] };
+	float dcolor[4] = { g_manager.DifuseColorDir.x, g_manager.DifuseColorDir.y, g_manager.DifuseColorDir.z, g_manager.DifuseColorDir.w };
+	ImGui::ColorEdit4("Difuse Color D", dcolor);
+	g_manager.DifuseColorDir = { dcolor[0],dcolor[1],dcolor[2],dcolor[3] };
 	float *AD = new float(g_manager.ADPS.x);
 	ImGui::SliderFloat("Attenuation DIRECTIONAL", AD, 10, .01);
 	g_manager.ADPS.x = *AD;
@@ -966,8 +969,11 @@ void Render()
 			g_manager.SLDPS.y = 1;
 	}
 	float color2[4] = { g_manager.SpecularColorPoint.x, g_manager.SpecularColorPoint.y, g_manager.SpecularColorPoint.z, g_manager.SpecularColorPoint.w };
-	ImGui::ColorEdit4("SC Point", color2);
+	ImGui::ColorEdit4("Specular Color P", color2);
 	g_manager.SpecularColorPoint = { color2[0],color2[1],color2[2],color2[3] };
+	float dcolor2[4] = { g_manager.DifuseColorPoint.x, g_manager.DifuseColorPoint.y, g_manager.DifuseColorPoint.z, g_manager.DifuseColorPoint.w };
+	ImGui::ColorEdit4("Difuse Color P", dcolor2);
+	g_manager.DifuseColorPoint = { dcolor2[0],dcolor2[1],dcolor2[2],dcolor2[3] };
 	//float *KL = new float(g_manager.KDASL.w);
 	//ImGui::SliderFloat("CONSTANTE LIGHT", KL, 0, 20);
 	//g_manager.KDASL.w = *KL;
@@ -999,8 +1005,11 @@ void Render()
 			g_manager.SLDPS.z = 1;
 	}
 	float color3[4] = { g_manager.SpecularColorSpot.x, g_manager.SpecularColorSpot.y, g_manager.SpecularColorSpot.z, g_manager.SpecularColorSpot.w };
-	ImGui::ColorEdit4("SC Spot", color3);
+	ImGui::ColorEdit4("Specular Color S", color3);
 	g_manager.SpecularColorSpot = { color3[0],color3[1],color3[2],color3[3] };
+	float dcolor3[4] = { g_manager.DifuseColorSpot.x, g_manager.DifuseColorSpot.y, g_manager.DifuseColorSpot.z, g_manager.DifuseColorSpot.w };
+	ImGui::ColorEdit4("Difuse Color S", dcolor3);
+	g_manager.DifuseColorSpot = { dcolor3[0],dcolor3[1],dcolor3[2],dcolor3[3] };
 
 	float *x = new float(g_manager.SLCOC.x);
 	ImGui::SliderFloat("SPOT ALPHA", x, 0, 1);
@@ -1171,8 +1180,12 @@ if (g_manager.rotateDirLight)
 	glUniform4fv(SCSID, 1, &g_manager.SpecularColorSpot[0]);
 	GLuint LPLQID = glGetUniformLocation(g_manager.m_programSActual.ID, "LPLQLD");
 	glUniform4fv(LPLQID, 1, &g_manager.LPLQLD[0]);
-	GLuint DCID = glGetUniformLocation(g_manager.m_programSActual.ID, "DC");
-	glUniform4fv(DCID, 1, &g_manager.DifuseColor[0]);
+	GLuint DCDID = glGetUniformLocation(g_manager.m_programSActual.ID, "DCD");
+	glUniform4fv(DCDID, 1, &g_manager.DifuseColorDir[0]);
+	GLuint DCPID = glGetUniformLocation(g_manager.m_programSActual.ID, "DCP");
+	glUniform4fv(DCPID, 1, &g_manager.DifuseColorPoint[0]);
+	GLuint DCSID = glGetUniformLocation(g_manager.m_programSActual.ID, "DCS");
+	glUniform4fv(DCSID, 1, &g_manager.DifuseColorSpot[0]);
 	GLuint SPID = glGetUniformLocation(g_manager.m_programSActual.ID, "SP");
 	glUniform4fv(SPID, 1, &g_manager.SPpower[0]);
 	GLuint ACID = glGetUniformLocation(g_manager.m_programSActual.ID, "AC");
@@ -1232,6 +1245,9 @@ if (g_manager.rotateDirLight)
 	float color[4] = { g_manager.SpecularColorDir.x, g_manager.SpecularColorDir.y, g_manager.SpecularColorDir.z, g_manager.SpecularColorDir.w };
 	ImGui::ColorEdit4("SC Direction", color);
 	g_manager.SpecularColorDir = { color[0],color[1],color[2],color[3] };
+	float dcolor[4] = { g_manager.DifuseColorDir.x, g_manager.DifuseColorDir.y, g_manager.DifuseColorDir.z, g_manager.DifuseColorDir.w };
+	ImGui::ColorEdit4("Difuse Color D", dcolor);
+	g_manager.DifuseColorDir = { dcolor[0],dcolor[1],dcolor[2],dcolor[3] };
 	float *AD = new float(g_manager.ADPS.x);
 	ImGui::SliderFloat("Attenuation DIRECTIONAL", AD, 10, .01);
 	g_manager.ADPS.x = *AD;
@@ -1250,6 +1266,9 @@ if (g_manager.rotateDirLight)
 	float color2[4] = { g_manager.SpecularColorPoint.x, g_manager.SpecularColorPoint.y, g_manager.SpecularColorPoint.z, g_manager.SpecularColorPoint.w };
 	ImGui::ColorEdit4("SC Point", color2);
 	g_manager.SpecularColorPoint = { color2[0],color2[1],color2[2],color2[3] };
+	float dcolor2[4] = { g_manager.DifuseColorPoint.x, g_manager.DifuseColorPoint.y, g_manager.DifuseColorPoint.z, g_manager.DifuseColorPoint.w };
+	ImGui::ColorEdit4("Difuse Color P", dcolor2);
+	g_manager.DifuseColorPoint = { dcolor2[0],dcolor2[1],dcolor2[2],dcolor2[3] };
 	float *KL = new float(g_manager.KDASL.w);
 	ImGui::SliderFloat("CONSTANTE LIGHT", KL, 0, 20);
 	g_manager.KDASL.w = *KL;
@@ -1283,7 +1302,9 @@ if (g_manager.rotateDirLight)
 	float color3[4] = { g_manager.SpecularColorSpot.x, g_manager.SpecularColorSpot.y, g_manager.SpecularColorSpot.z, g_manager.SpecularColorSpot.w };
 	ImGui::ColorEdit4("SC Spot", color3);
 	g_manager.SpecularColorSpot = { color3[0],color3[1],color3[2],color3[3] };
-
+	float dcolor3[4] = { g_manager.DifuseColorSpot.x, g_manager.DifuseColorSpot.y, g_manager.DifuseColorSpot.z, g_manager.DifuseColorSpot.w };
+	ImGui::ColorEdit4("Difuse Color S", dcolor3);
+	g_manager.DifuseColorSpot = { dcolor3[0],dcolor3[1],dcolor3[2],dcolor3[3] };
 	float *x = new float(g_manager.SLCOC.x);
 	ImGui::SliderFloat("SPOT ALPHA", x, 0, 1);
 	g_manager.SLCOC.x = *x;
@@ -1426,7 +1447,7 @@ if (g_manager.rotateDirLight)
 	g_manager.Exposure = *fExposure;
 	delete fExposure;
 	float *fBloomMuiltiplier = new float(g_manager.BloomMuiltiplier);
-	ImGui::SliderFloat("BloomMuiltiplier", fBloomMuiltiplier, 0, 50);
+	ImGui::SliderFloat("BloomMuiltiplier", fBloomMuiltiplier, 0, 100);
 	g_manager.BloomMuiltiplier = *fBloomMuiltiplier;
 	delete fBloomMuiltiplier;
 
@@ -1512,7 +1533,9 @@ void drawnm_meshes(XMMATRIX mvp)
 		m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_View._41,-g_manager.m_camera[g_manager.m_cameraNum].m_View._42,g_manager.m_camera[g_manager.m_cameraNum].m_View._43,g_manager.m_camera[g_manager.m_cameraNum].m_View._44};
 		//m_meshes.vViewPosition = { g_manager.m_camera[g_manager.m_cameraNum].m_View._14,-g_manager.m_camera[g_manager.m_cameraNum].m_View._24,g_manager.m_camera[g_manager.m_cameraNum].m_View._34,g_manager.m_camera[g_manager.m_cameraNum].m_View._44};
 
-		m_meshes.DifuseColor = g_manager.DifuseColor;
+		//m_meshes.DifuseColor = g_manager.DifuseColor;
+		//m_meshes.DifuseColor = g_manager.DifuseColor;
+		//m_meshes.DifuseColor = g_manager.DifuseColor;
 		//m_meshes.SpecularColor = g_manager.SpecularColor;
 		m_meshes.SPpower = g_manager.SPpower;
 		m_meshes.AmbientalColor = g_manager.ambientColor;

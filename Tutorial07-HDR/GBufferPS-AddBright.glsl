@@ -22,7 +22,7 @@ void main()
 	//combination
   //float4 color= float4(1,1,0,1);
   //return color;
-	vec4 output = (0.5f*(blurH + blurV)*bright);
+	vec4 output = (blurH + blurV)+bright;
 	color= output;
 
 }

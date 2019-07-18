@@ -24,7 +24,7 @@ vec3 Reinhard(vec3 inColor)
 {
 	inColor *= Exposure;
 	inColor /= (1.0f + inColor);
-	inColor = pow(inColor, vec3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f));
+	inColor = max(pow(inColor, vec3((1.0f / 2.2f), (1.0f / 2.2f), (1.0f / 2.2f))),0.0f);
 
 	return inColor;
 }
@@ -72,18 +72,18 @@ vec3 Uncharted2Tonemap(vec3 inx)
 	float E = 0.02f;
 	float F = 0.3f;
 	
-	vec3 ton = A*inx;
-	ton += C * B;
-	ton *= inx;
-	ton += D * E;
-	vec3 ton2 = A*inx;
-	ton2 += B;
-	ton2 *= inx;
-	ton2 += D * F;
-	ton2 -= E / F;
-	vec3 output = ton / ton2;
-	//return ((inx * (A * inx + C * B) + D * E) / (inx * (A * inx + B) + D * F)) - E / F;
-	return output;
+	//vec3 ton = A*inx;
+	//ton += C * B;
+	//ton *= inx;
+	//ton += D * E;
+	//vec3 ton2 = A*inx;
+	//ton2 += B;
+	//ton2 *= inx;
+	//ton2 += D * F;
+	//ton2 -= E / F;
+	//vec3 output = ton / ton2;
+	return ((inx * (A * inx + C * B) + D * E) / (inx * (A * inx + B) + D * F)) - E / F;
+	//return output;
 }
 
 vec3 Uncharted2(vec3 inColor)
@@ -112,61 +112,28 @@ void main()
 	// add HDR
 	inColor += BloomMuiltiplier * texture2D(AddBright, TexCoord.xy).xyz;
 
-	// Take the linear color to standard RGBA color
-	//if (Input.Tex.x < 0.5f)
-	//{
-	 //   if (Input.Tex.y < 0.5f)
-	 //   {
-	 //		Color = Reinhard(Color);
-	 //   }
-	 //   else
-	 //   {
-	 //	   //Color = Burgess_Dawson(Color);
-	 //   }
-	//}
-	//else if (Input.Tex.x < 0.5f && Input.Tex.y > 0.5f)
-	//{
-	 //  Color = Burgess_Dawson(Color);
-	//}
-	//else if (Input.Tex.x > 0.5f)
-	//{
-	 //   if (Input.Tex.y < 0.5f)
-	 //   {
-	 //	   Color = BasicExposure(Color);
-	 //   }
-	 //   else
-	 //   {
-	 //	   //Color = Uncharted2(Color);
-	 //   }
-	//  //Color = float3(1,0,0);
-	//}
-	//else if (Input.Tex.x > 0.5f && Input.Tex.y > 0.5f)
-	//{
-	 //  Color = Uncharted2(Color);
-	//}
-	//Color = BasicExposure(Color);
-	// Return to standard RGBA
-	//if (Input.Tex.x < 0.25f)
-	//  Color = Uncharted2(Color);
-	//if(Input.Tex.x < 0.5f&&Input.Tex.x > 0.25f)
-	//  Color = Reinhard(Color);
-	//if (Input.Tex.x < 0.75f&&Input.Tex.x > 0.5f)
-	//   Color = BasicExposure(Color);
-	//if (Input.Tex.x < 1.0f&&Input.Tex.x > 0.75f)
-	//   Color = Burgess_Dawson(Color);
+
 	if (TexCoord.x > 0.5f)
 	{
 		if (TexCoord.y > 0.5f)
+		{ 
 			inColor = Burgess_Dawson(inColor);
+		}
 		else
+		{ 
 			inColor = BasicExposure(inColor);
+		}
 	}
 	if (TexCoord.x < 0.5f)
 	{
 		if (TexCoord.y > 0.5f)
+		{ 
 			inColor = Uncharted2(inColor);
+		}
 		else
+		{
 			inColor = Reinhard(inColor);
+		}
 	}
 	color=vec4(inColor, 1.0f);
 
